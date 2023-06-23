@@ -27,7 +27,8 @@ setup:
 	go install github.com/swaggo/swag/cmd/swag@latest
 
 docs:
-	swag i --dir ./cmd/oew/
+	swag i --dir ./cmd/oew/,\
+							./internal/handler/
 
 install_deps:
 	$(info ******************** downloading dependencies ********************)

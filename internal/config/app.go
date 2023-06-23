@@ -18,7 +18,6 @@ type AppConfig struct {
 	Validator  echo.Validator        `json:"-"`
 	CORSConfig middleware.CORSConfig `json:"-"`
 
-	// 3rd-parties settings
 	LogLevel string `json:"log_level"`
 }
 
@@ -43,7 +42,6 @@ func InitAppConfig() (*AppConfig, error) {
 
 	envFile := fmt.Sprintf(".env.%s", currentEnv)
 
-	// load env file if exists
 	_, err = os.Stat(envFile)
 
 	if err == nil {
@@ -55,7 +53,7 @@ func InitAppConfig() (*AppConfig, error) {
 
 	appPort := os.Getenv("PORT")
 	if appPort == "" {
-		appPort = "8088"
+		appPort = "8080"
 	}
 
 	return &AppConfig{
@@ -65,7 +63,6 @@ func InitAppConfig() (*AppConfig, error) {
 		Validator:   &AppValidator{validator: validator.New()},
 		CORSConfig:  middleware.DefaultCORSConfig,
 
-		// 3rd-parties settings
 		LogLevel: os.Getenv("LOG_LEVEL"),
 	}, nil
 }

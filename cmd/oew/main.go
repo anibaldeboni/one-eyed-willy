@@ -8,11 +8,12 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	_ "github.com/one-eyed-willy/docs"
 	"github.com/one-eyed-willy/internal/config"
+	"github.com/one-eyed-willy/internal/handler"
+	"github.com/one-eyed-willy/internal/router"
 	"github.com/one-eyed-willy/pkg/logger"
 	echoSwagger "github.com/swaggo/echo-swagger"
-	_ "github.com/swaggo/echo-swagger/example/docs"
 )
 
 // @title One-Eyed-Willy REST pdf generation API
@@ -32,30 +33,21 @@ import (
 // @consumes application/json
 func main() {
 	conf, _ := config.InitAppConfig()
+	r := router.New(conf)
+	h := handler.New()
 
-	logger.InitWithOptions(logger.WithConfigLevel(conf.LogLevel))
-	if logger.Log() != nil {
-		defer logger.Log().Sync()
-	}
-
-	e := echo.New()
-	e.Use(middleware.LoggerWithConfig(config.GetEchoLogConfig(conf)))
-	e.Use(middleware.Recover())
-	e.Use(middleware.RequestID())
-	e.HideBanner = true
-	e.Validator = conf.Validator
-
-	e.GET("/", func(c echo.Context) error {
+	r.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "Hello there! This is One-Eyed-Willy pdf generator",
 		})
 	})
 
-	e.GET("/docs/*", echoSwagger.WrapHandler)
+	r.GET("/docs/*", echoSwagger.WrapHandler)
 
-	// Start server
+	h.Register(r.Group(conf.BaseURL))
+
 	go func() {
-		if err := e.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
+		if err := r.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
 			logger.Log().Fatal("shutting down the server")
 		}
 	}()
@@ -67,7 +59,7 @@ func main() {
 	<-quit
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := e.Shutdown(ctx); err != nil {
-		e.Logger.Fatal(err)
+	if err := r.Shutdown(ctx); err != nil {
+		r.Logger.Fatal(err)
 	}
 }
