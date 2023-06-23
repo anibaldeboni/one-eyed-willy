@@ -1,0 +1,23 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This documentation for One-Eyed-Willy pdf generator.",
+        "title": "One-Eyed-Willy REST pdf generation API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Aníbal Deboni Neto",
+            "email": "anibaldeboni@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/pdf",
+    "paths": {}
+}

@@ -1,0 +1,17 @@
+basePath: /pdf
+info:
+  contact:
+    email: anibaldeboni@gmail.com
+    name: Aníbal Deboni Neto
+  description: This documentation for One-Eyed-Willy pdf generator.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: One-Eyed-Willy REST pdf generation API
+  version: "1.0"
+paths: {}
+schemes:
+- http
+- https
+swagger: "2.0"
