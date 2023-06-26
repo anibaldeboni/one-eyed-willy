@@ -12,15 +12,12 @@ default: all
 all: fmt test
 
 fmt:
-	$(info ******************** checking formatting ********************)
 	@test -z $(shell gofmt -l $(SRC)) || (gofmt -d $(SRC); exit 1)
 
 lint:
-	$(info ******************** running lint tools ********************)
 	golangci-lint run -v
 
 test: install_deps
-	$(info ******************** running tests ********************)
 	go test -v ./...
 
 setup:
@@ -31,7 +28,6 @@ docs:
 							./internal/handler/
 
 install_deps:
-	$(info ******************** downloading dependencies ********************)
 	go get -v ./...
 
 run:
