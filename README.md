@@ -5,7 +5,8 @@ A go restful api to generate pdf from html
 # What?
 
 One-Eyed-Willy (OEW) is a simple experiment to create a web app that generates pdf files from a html. The app is named after the pirate of the Goonies movie. When I was a child I loved this movie and prefered pirates over ninjas ;-)
-OEW makes use of the `chormedp` package to render the html and generate the pdf file. Currently we don't have a native Go implementation of such tool, from my research `go-weasyprint` is a promising alternativa but unfortunately it hasn't reached production level and `wkthmltopdf` is outdated and undermaintained.
+
+OEW makes use of the `chormedp` package to render the html and generate the pdf file. Currently we don't have a native Go implementation of such tool, from my research `go-weasyprint` is a promising alternative but unfortunately it hasn't reached production level and `wkthmltopdf` is outdated and undermaintained.
 
 # Installation
 
