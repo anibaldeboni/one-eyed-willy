@@ -1,5 +1,7 @@
 BIN="./bin"
 SRC=$(shell find . -name "*.go")
+export APP=one-eyed-willy
+export LDFLAGS="-w -s"
 
 ifeq (, $(shell which golangci-lint))
 $(warning "could not find golangci-lint in $(PATH), run: curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh")
@@ -34,7 +36,10 @@ run:
 	go run ./cmd/oew/
 
 build:
-	go build -v -o ./bin/ ./cmd/oew
+	go build -v -o ./bin/$(APP) ./cmd/oew
+
+build-static:
+	CGO_ENABLED=0 go build -race -v -o $(APP) -a -installsuffix cgo -ldflags $(LDFLAGS) .
 
 clean:
 	rm -rf $(BIN)

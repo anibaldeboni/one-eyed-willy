@@ -1,20 +1,41 @@
 # one-eyed-willy
+
 A go restful api to generate pdf from html
 
 # What?
-This is a simple experiment to create a web app that generates pdf files from a html. The app is named after the pirate of the Goonies movie. When I was a child I loved this movie and prefered pirates over ninjas ;-)
+
+One-Eyed-Willy (OEW) is a simple experiment to create a web app that generates pdf files from a html. The app is named after the pirate of the Goonies movie. When I was a child I loved this movie and prefered pirates over ninjas ;-)
+OEW makes use of the `chormedp` package to render the html and generate the pdf file. Currently we don't have a native Go implementation of such tool, from my research `go-weasyprint` is a promising alternativa but unfortunately it hasn't reached production level and `wkthmltopdf` is outdated and undermaintained.
 
 # Installation
+
 ```
 git clone git@github.com:anibaldeboni/one-eyed-willy.git
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.53.3
 make install_deps
 ```
 
+# Unit tests
+
+```
+make test
+```
+
+# Building
+
+```
+make build
+```
+
 # Running
+
 ```
 make run
 ```
+
 It will start a server on port `8080`
+
+`GET http://localhost:8080/docs` shows the swagger documentation
 
 `POST http://localhost:8080/pdf` generates a pdf file from html base64 encoded string
 

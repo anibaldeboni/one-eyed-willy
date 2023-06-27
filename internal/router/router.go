@@ -11,6 +11,7 @@ func New(conf *config.AppConfig) *echo.Echo {
 
 	logger.InitWithOptions(logger.WithConfigLevel(conf.LogLevel))
 	if logger.Log() != nil {
+		//nolint:errcheck
 		defer logger.Log().Sync()
 	}
 

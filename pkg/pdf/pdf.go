@@ -2,9 +2,7 @@ package pdf
 
 import (
 	"context"
-	"strings"
 
-	wkhtml "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/microcosm-cc/bluemonday"
@@ -18,22 +16,6 @@ func sanitizeHtml(html string) string {
 }
 
 func GenerateFromHtml(html string) ([]byte, error) {
-	pdfg, err := wkhtml.NewPDFGenerator()
-	if err != nil {
-		return nil, err
-	}
-
-	pdfg.AddPage(wkhtml.NewPageReader(strings.NewReader(sanitizeHtml(html))))
-
-	err = pdfg.Create()
-	if err != nil {
-		return nil, err
-	}
-
-	return pdfg.Bytes(), nil
-}
-
-func GenerateWithNewParser(html string) ([]byte, error) {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 
