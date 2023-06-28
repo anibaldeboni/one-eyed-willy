@@ -58,7 +58,10 @@ func main() {
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	defer func() {
+		logger.Log().Info("shutting down server, good bye!")
+		cancel()
+	}()
 	if err := r.Shutdown(ctx); err != nil {
 		r.Logger.Fatal(err)
 	}
