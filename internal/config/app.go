@@ -26,10 +26,7 @@ type AppValidator struct {
 }
 
 func (cv *AppValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		return err
-	}
-	return nil
+	return cv.validator.Struct(i)
 }
 
 func InitAppConfig() (*AppConfig, error) {

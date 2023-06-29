@@ -2,8 +2,18 @@ linters:
   enable:
     - gocyclo
     - gofmt
+    - goimports
+    - gosec
+    - bodyclose
+    - misspell
+    - revive
 linters-settings:
   gocyclo:
     # Minimal code complexity to report.
     # Default: 30 (but we recommend 10-20)
     min-complexity: 10
+
+output:
+  format: "colored-line-number"
+  print-issued-lines: true
+  print-linter-name: true

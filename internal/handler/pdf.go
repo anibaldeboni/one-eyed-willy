@@ -20,18 +20,18 @@ import (
 // @Failure 400 {object} utils.Error
 // @Failure 500 {object} utils.Error
 // @Router /pdf [post]
-func (h *Handler) GeneratePdfFromHtml(c echo.Context) error {
-	req := &createPdfFromHtmlRequest{}
+func (h *Handler) GeneratePdfFromHTML(c echo.Context) error {
+	req := &createPdfFromHTMLRequest{}
 	if err := req.bind(c); err != nil {
 		return c.JSON(http.StatusBadRequest, utils.NewError(err))
 	}
 
-	rawDecodedText, err := base64.StdEncoding.DecodeString(req.Html)
+	rawDecodedText, err := base64.StdEncoding.DecodeString(req.HTML)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.GenerateFromHtml(string(rawDecodedText))
+	pdf, err := pdf.GenerateFromHTML(string(rawDecodedText))
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))

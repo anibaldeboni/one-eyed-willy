@@ -13,19 +13,19 @@ import (
 	"github.com/phpdave11/gofpdf/contrib/gofpdi"
 )
 
-func sanitizeHtml(html string) string {
+func sanitizeHTML(html string) string {
 	p := bluemonday.UGCPolicy()
 
 	// The policy can then be used to sanitize lots of input and it is safe to use the policy in multiple goroutines
 	return p.Sanitize(html)
 }
 
-func GenerateFromHtml(html string) ([]byte, error) {
+func GenerateFromHTML(html string) ([]byte, error) {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 
 	var buf []byte
-	if err := chromedp.Run(ctx, printHtmlToPDF(sanitizeHtml(html), &buf)); err != nil {
+	if err := chromedp.Run(ctx, printHTMLToPDF(sanitizeHTML(html), &buf)); err != nil {
 		return nil, err
 	}
 
@@ -33,7 +33,7 @@ func GenerateFromHtml(html string) ([]byte, error) {
 
 }
 
-func printHtmlToPDF(html string, res *[]byte) chromedp.Tasks {
+func printHTMLToPDF(html string, res *[]byte) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.Navigate("about:blank"),
 		chromedp.ActionFunc(func(ctx context.Context) error {

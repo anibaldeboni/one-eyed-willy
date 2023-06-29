@@ -19,7 +19,7 @@ func TestGeneratePdfCaseSuccess(t *testing.T) {
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	assert.NoError(t, h.GeneratePdfFromHtml(c))
+	assert.NoError(t, h.GeneratePdfFromHTML(c))
 	if assert.Equal(t, http.StatusOK, rec.Code) {
 		assert.Equal(t, "application/pdf", rec.Header().Clone().Get("Content-Type"))
 		assert.Greater(t, len(rec.Body.Bytes()), 0)
