@@ -37,5 +37,5 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	return c.Blob(http.StatusOK, "application/pdf", pdf)
+	return c.Blob(http.StatusOK, MIMEApplicationPdf, pdf)
 }
