@@ -1,6 +1,5 @@
 linters:
   enable:
-    - gocyclo
     - gofmt
     - goimports
     - gosec
@@ -8,10 +7,12 @@ linters:
     - misspell
     - revive
 linters-settings:
-  gocyclo:
-    # Minimal code complexity to report.
-    # Default: 30 (but we recommend 10-20)
-    min-complexity: 10
+  revive:
+    rules:
+      - name: cyclomatic
+        severity: warning
+        disabled: false
+        arguments: [10]
 
 output:
   format: "colored-line-number"
