@@ -3,6 +3,7 @@ package pdf
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 
 	"github.com/chromedp/cdproto/page"
@@ -54,9 +55,14 @@ func printHtmlToPDF(html string, res *[]byte) chromedp.Tasks {
 	}
 }
 
-func MergePdfs(files [][]byte) ([]byte, error) {
-	pdf := gofpdf.New("P", "pt", "A4", "")
+func MergePdfs(files [][]byte) (file []byte, err error) {
+	defer func() {
+		if recover() != nil {
+			err = errors.New("Some files could not be read")
+		}
+	}()
 
+	pdf := gofpdf.New("P", "pt", "A4", "")
 	imp := gofpdi.NewImporter()
 
 	for _, res := range files {
