@@ -21,15 +21,20 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.1.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
+	github.com/hhrutter/lzw v1.0.0 // indirect
+	github.com/hhrutter/tiff v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/phpdave11/gofpdi v1.0.12 // indirect
+	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
+	golang.org/x/image v0.5.0 // indirect
 	golang.org/x/tools v0.10.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
@@ -48,7 +53,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.24
-	github.com/phpdave11/gofpdf v1.4.2
+	github.com/pdfcpu/pdfcpu v0.4.1
 	github.com/swaggo/echo-swagger v1.4.0
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect

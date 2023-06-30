@@ -8,34 +8,34 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMergePdfs(t *testing.T) {
+func TestMerge(t *testing.T) {
 	type args struct {
 		files [][]byte
 	}
 	tests := []struct {
-		name     string
-		args     args
-		fileSize int
-		err      error
+		name          string
+		args          args
+		resultIsEmpty bool
+		err           error
 	}{
 		{
-			name:     "When all files could be read",
-			args:     args{files: loadFiles(false, t)},
-			fileSize: 319359,
-			err:      nil,
+			name:          "When all files could be read",
+			args:          args{files: loadFiles(false, t)},
+			resultIsEmpty: false,
+			err:           nil,
 		},
 		{
-			name:     "When some files are invalid",
-			args:     args{files: loadFiles(true, t)},
-			fileSize: 0,
-			err:      errors.New(""),
+			name:          "When some file is invalid",
+			args:          args{files: loadFiles(true, t)},
+			resultIsEmpty: true,
+			err:           errors.New("Could not merge pdfs. Some files can't be read"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := MergePdfs(tt.args.files)
+			result, err := Merge(tt.args.files)
 			assert.IsType(t, tt.err, err)
-			assert.Equal(t, tt.fileSize, len(result))
+			assert.Equal(t, tt.resultIsEmpty, result == nil)
 		})
 	}
 }

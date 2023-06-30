@@ -9,8 +9,9 @@ import (
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/phpdave11/gofpdf"
-	"github.com/phpdave11/gofpdf/contrib/gofpdi"
+	pdfcpuAPI "github.com/pdfcpu/pdfcpu/pkg/api"
+	pdfcpuLog "github.com/pdfcpu/pdfcpu/pkg/log"
+	pdfcpuConfig "github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
 )
 
 func sanitizeHTML(html string) string {
@@ -55,37 +56,19 @@ func printHTMLToPDF(html string, res *[]byte) chromedp.Tasks {
 	}
 }
 
-func MergePdfs(files [][]byte) (file []byte, err error) {
-	defer func() {
-		if recover() != nil {
-			err = errors.New("Some files could not be read")
-		}
-	}()
+func Merge(files [][]byte) (file []byte, err error) {
+	pdfcpuConfig.ConfigPath = "disable"
+	pdfcpuLog.DisableLoggers()
 
-	pdf := gofpdf.New("P", "pt", "A4", "")
-	imp := gofpdi.NewImporter()
-
+	conf := pdfcpuConfig.NewDefaultConfiguration()
+	var rs []io.ReadSeeker
 	for _, res := range files {
-		rs := io.ReadSeeker(bytes.NewReader(res))
-		tpl := imp.ImportPageFromStream(pdf, &rs, 1, "/MediaBox")
-
-		pageSizes := imp.GetPageSizes()
-		numberOfPages := len(pageSizes)
-
-		for i := 1; i <= numberOfPages; i++ {
-			pdf.AddPage()
-
-			if i > 1 {
-				tpl = imp.ImportPageFromStream(pdf, &rs, i, "/MediaBox")
-			}
-			imp.UseImportedTemplate(pdf, tpl, 0, 0, pageSizes[i]["/MediaBox"]["w"], pageSizes[i]["/MediaBox"]["h"])
-		}
+		rs = append(rs, io.ReadSeeker(bytes.NewReader(res)))
 	}
-
 	buf := bytes.Buffer{}
-	if err := pdf.Output(&buf); err != nil {
-		return nil, err
-	}
 
+	if err = pdfcpuAPI.MergeRaw(rs, &buf, conf); err != nil {
+		return nil, errors.New("Could not merge pdfs. Some files can't be read")
+	}
 	return buf.Bytes(), nil
 }
