@@ -1,8 +1,12 @@
 package handler
 
 import (
+	"bytes"
+	"fmt"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
@@ -25,4 +29,44 @@ func TestGeneratePdfCaseSuccess(t *testing.T) {
 		assert.Greater(t, len(rec.Body.Bytes()), 0)
 		assert.NotEmpty(t, rec.Body)
 	}
+}
+
+func TestMergePdfsCaseSuccess(t *testing.T) {
+	setup()
+
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+
+	file1, file2 := loadFiles(t)
+	part, _ := writer.CreateFormFile("files", "file1.pdf")
+	part.Write(file1)
+
+	part2, _ := writer.CreateFormFile("files", "file2.pdf")
+	part2.Write(file2)
+	writer.Close()
+
+	req := httptest.NewRequest(echo.POST, "/pdf/merge", body)
+	contentType := fmt.Sprintf("%s; boundary=%s", echo.MIMEMultipartForm, writer.Boundary())
+	req.Header.Add(echo.HeaderContentType, contentType)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	if assert.NotPanics(t, func() { _ = h.MergePdfs(c) }) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.NoError(t, h.MergePdfs(c))
+	}
+}
+
+func loadFiles(t *testing.T) (file1 []byte, file2 []byte) {
+	file1, err := os.ReadFile("../../testdata/file1.pdf")
+	if err != nil {
+		t.Fatal("testdata/file1.pdf not found")
+	}
+
+	file2, err = os.ReadFile("../../testdata/file2.pdf")
+	if err != nil {
+		t.Fatal("testdata/file2.pdf not found")
+	}
+
+	return file1, file2
 }

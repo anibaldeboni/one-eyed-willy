@@ -54,10 +54,7 @@ func loadFiles(includeInvalid bool, t *testing.T) [][]byte {
 	files := [][]byte{file1, file2}
 
 	if includeInvalid == true {
-		fileInvalid, err := os.ReadFile("../../testdata/file-invalid.pdf")
-		if err != nil {
-			t.Fatal("testdata/file-invalid.pdf not found")
-		}
+		fileInvalid := []byte(`invalid-file`)
 		files = append(files, fileInvalid)
 	}
 
