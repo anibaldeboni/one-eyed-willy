@@ -12,14 +12,18 @@ OEW makes use of the `chormedp` package to render the html and generate the pdf 
 
 ```
 git clone git@github.com:anibaldeboni/one-eyed-willy.git
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.53.3
-make install_deps
 ```
 
 # Unit tests
 
 ```
 make test
+```
+
+# Linter tests
+
+```
+make lint
 ```
 
 # Building
