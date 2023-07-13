@@ -23,7 +23,108 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/pdf": {
+            "post": {
+                "description": "Generate a new pdf file from a html string",
+                "consumes": [
+                    "applcation/json"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "pdf"
+                ],
+                "summary": "Create a pdf",
+                "parameters": [
+                    {
+                        "description": "Base64 encoded string of a html",
+                        "name": "html",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.createPdfFromHTMLRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/pdf/merge": {
+            "post": {
+                "description": "Merges two or more pdfs",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "pdf"
+                ],
+                "summary": "Merge pdfs",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "this is a pdf file",
+                        "name": "files",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handler.createPdfFromHTMLRequest": {
+            "type": "object",
+            "required": [
+                "html"
+            ],
+            "properties": {
+                "html": {
+                    "type": "string"
+                }
+            }
+        },
+        "utils.Error": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "object",
+                    "additionalProperties": true
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

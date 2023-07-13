@@ -2,6 +2,7 @@ package handler
 
 import "github.com/labstack/echo/v4"
 
+// swagger:parameters createPdfFromHTMLRequest
 type createPdfFromHTMLRequest struct {
 	HTML string `json:"html" validate:"required,base64"`
 }

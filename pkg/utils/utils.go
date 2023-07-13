@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// swagger:parameters Error
 type Error struct {
 	Errors map[string]interface{} `json:"errors"`
 }
