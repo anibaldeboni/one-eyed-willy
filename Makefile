@@ -3,29 +3,19 @@ SRC=$(shell find . -name "*.go")
 export APP=one-eyed-willy
 export LDFLAGS="-w -s"
 
-ifeq (, $(shell which golangci-lint))
-$(warning "could not find golangci-lint in $(PATH), run: curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh")
-endif
-
-.PHONY: fmt lint test install_deps clean
+.PHONY: lint test install_deps install_linter install_swag clean
 
 default: all
 
-all: fmt test
+all: lint test
 
-fmt:
-	@test -z $(shell gofmt -l $(SRC)) || (gofmt -d $(SRC); exit 1)
-
-lint:
+lint: install_linter
 	golangci-lint run -v
 
 test: install_deps
 	go test -v ./...
 
-setup:
-	go install github.com/swaggo/swag/cmd/swag@latest
-
-docs:
+docs: install_swag
 	swag i --parseInternal --dir ./cmd/oew/,./internal/handler/,./pkg/utils
 
 install_deps:
@@ -42,3 +32,13 @@ build-static:
 
 clean:
 	rm -rf $(BIN)
+
+install_linter:
+ @if [ $(shell which golangci-lint) = "" ]; then\
+    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.53.3;\
+ fi
+	
+install_swag:
+	@if [ $(shell which swag) = "" ]; then\
+		go install github.com/swaggo/swag/cmd/swag@latest;\
+	fi

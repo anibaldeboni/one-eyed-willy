@@ -75,7 +75,9 @@ func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {
 
 	for i := 0; i < numberOfFiles; i++ {
 		part, _ := writer.CreateFormFile("files", fmt.Sprintf("file%d.pdf", i))
-		part.Write(file)
+		if _, err := part.Write(file); err != nil {
+			t.Fatal("could not write form-data")
+		}
 	}
 	writer.Close()
 
