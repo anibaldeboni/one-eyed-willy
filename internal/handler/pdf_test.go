@@ -68,12 +68,12 @@ func TestMergePdfs(t *testing.T) {
 func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
+	file, err := os.ReadFile("../../testdata/file1.pdf")
+	if err != nil {
+		t.Fatal("testdata/file1.pdf not found")
+	}
 
 	for i := 0; i < numberOfFiles; i++ {
-		file, err := os.ReadFile("../../testdata/file1.pdf")
-		if err != nil {
-			t.Fatal("testdata/file1.pdf not found")
-		}
 		part, _ := writer.CreateFormFile("files", fmt.Sprintf("file%d.pdf", i))
 		part.Write(file)
 	}
