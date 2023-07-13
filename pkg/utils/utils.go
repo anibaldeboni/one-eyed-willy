@@ -46,3 +46,27 @@ func NotFound() Error {
 	e.Errors["body"] = "resource not found"
 	return e
 }
+
+func containBytes(s []byte, e interface{}) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+// # MAY I HAVE YOUR ATTENTION, PLEASE! #
+//
+// DO NOT USE FOR LARGE SLICES
+func IsByteSubSlice(slice []byte, subslice []byte) bool {
+	if len(slice) < len(subslice) {
+		return false
+	}
+	for _, e := range slice {
+		if !containBytes(subslice, e) {
+			return false
+		}
+	}
+	return true
+}
