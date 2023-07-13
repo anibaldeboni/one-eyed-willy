@@ -8,10 +8,30 @@ One-Eyed-Willy (OEW) is a simple experiment to create a web app that generates p
 
 OEW makes use of the `chormedp` package to render the html and generate the pdf file. Currently we don't have a native Go implementation of such tool, from my research `go-weasyprint` is a promising alternative but unfortunately it hasn't reached production level and `wkthmltopdf` is outdated and undermaintained.
 
+# Project structure
+
+```
+.
+├── cmd
+│   └── oew
+│       └── main.go     // application entrypoint
+├── docs                // swagger documentation, automatically generated with `make docs`
+├── internal            // application internal packages, not reusable
+│   ├── config          // app and echo configurations
+│   ├── handler         // handlers are the controllers and usecases
+│   └── router          // initialize echo with the application configs
+├── pkg                 // public packages, could be reused by other projects
+│   ├── logger          // a wrapper around zap logger
+│   ├── pdf             // pdf related functions, currently generate from html and merge files
+│   └── utils           // generic functions created to makes some tasks simpler
+└── testdata            // files and data used in tests
+```
+
 # Installation
 
 ```
 git clone git@github.com:anibaldeboni/one-eyed-willy.git
+make install_deps
 ```
 
 # Unit tests
@@ -44,8 +64,4 @@ It will start a server on port `8080`
 
 `POST http://localhost:8080/pdf` generates a pdf file from html base64 encoded string
 
-```
-{
-    "html": "PGh0bWw+CjxoZWFkPgoJPHRpdGxlPk15IFBERiBGaWxlPC90aXRsZT4KPC9oZWFkPgo8Ym9keT4KCTxwPkhlbGxvIHRoZXJlISBJJ20gYSBwZGYgZmlsZSBnZW5lcmF0ZSBmcm9tIGEgaHRtbCB1c2luZyBnbyBhbmQgZ29wZGYgcGFja2FnZTwvcD4KPC9ib2R5Pgo8L2h0bWw+"
-}
-```
+`POST http://localhost:8080/pdf/merge` merges two or more pdf files
