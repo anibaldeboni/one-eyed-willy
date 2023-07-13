@@ -34,9 +34,9 @@ clean:
 	rm -rf $(BIN)
 
 install_linter:
- @if [ $(shell which golangci-lint) = "" ]; then\
-    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.53.3;\
- fi
+	@if [ $(shell which golangci-lint) = "" ]; then\
+		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.53.3;\
+	fi
 	
 install_swag:
 	@if [ $(shell which swag) = "" ]; then\
