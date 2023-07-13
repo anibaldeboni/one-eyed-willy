@@ -15,17 +15,17 @@ import (
 )
 
 // CreatePdfFromHtml godoc
-// @title Generate pdf
-// @summary Create a pdf
-// @description Generate a new pdf file from a html string
-// @tags pdf
-// @accept applcation/json
-// @produce application/octet-stream
-// @Param html body createPdfFromHTMLRequest true "Base64 encoded string of a html"
-// @success 200
-// @failure 400
-// @failure 500
-// @Router /pdf [post]
+//
+//	@summary		Create a pdf
+//	@description	Generate a new pdf file from a html string
+//	@tags			pdf
+//	@accept			applcation/json
+//	@produce		application/octet-stream
+//	@Param			html	body	createPdfFromHTMLRequest	true	"Base64 encoded string of a html"
+//	@success		200
+//	@failure		400	{object}	utils.Error
+//	@failure		500	{object}	utils.Error
+//	@Router			/pdf [post]
 func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 
 	req := &createPdfFromHTMLRequest{}
@@ -83,17 +83,17 @@ func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
 }
 
 // MergePdfFiles godoc
-// @Title Merge Pdfs
-// @Summary Merge pdfs
-// @Description Merges two or more pdfs
-// @Tags pdf
-// @Accept multipart/form-data
-// @Produce application/octet-stream
-// @param files formData	file			true	"this is a pdf file"
-// @Success 200
-// @Failure 400 {object} utils.Error
-// @Failure 500 {object} utils.Error
-// @Router /pdf/merge [post]
+//
+//	@Summary		Merge pdfs
+//	@Description	Merges two or more pdfs
+//	@Tags			pdf
+//	@Accept			multipart/form-data
+//	@Produce		application/octet-stream
+//	@param			files	formData	file	true	"this is a pdf file"
+//	@Success		200
+//	@Failure		400	{object}	utils.Error
+//	@Failure		500	{object}	utils.Error
+//	@Router			/pdf/merge [post]
 func (h *Handler) MergePdfs(c echo.Context) (err error) {
 	form, err := c.MultipartForm()
 	if err != nil {
