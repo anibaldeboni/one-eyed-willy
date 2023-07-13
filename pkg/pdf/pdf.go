@@ -66,7 +66,7 @@ func Merge(files [][]byte) (file []byte, err error) {
 	var rs []io.ReadSeeker
 	for i, res := range files {
 		if err := IsPdf(res); err != nil {
-			return nil, fmt.Errorf("File number %d is not a pdf", i)
+			return nil, fmt.Errorf("File number %d is an invalid pdf: %s", i, err.Error())
 		}
 		rs = append(rs, io.ReadSeeker(bytes.NewReader(res)))
 	}
@@ -99,7 +99,7 @@ func IsPdf(data []byte) error {
 		if utils.IsByteSubSlice(data[len(data)-7:], eof1dot3) {
 			return nil
 		}
-		return errors.New("Invalid file terminator")
+		return errors.New("Invalid file terminator pdf v1.3")
 	}
 
 	if isVersion1dot4(data) {
@@ -115,7 +115,7 @@ func IsPdf(data []byte) error {
 		if utils.IsByteSubSlice(data[len(data)-6:], eof1dot4) {
 			return nil
 		}
-		return errors.New("Invalid file terminator")
+		return errors.New("Invalid file terminator for pdf v1.4")
 	}
 
 	return nil
