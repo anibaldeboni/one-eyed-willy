@@ -8,6 +8,37 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestGenerateFromHTML(t *testing.T) {
+	type args struct {
+		html string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "When html is valid",
+			args: args{html: "<h1>Hello World</h1>"},
+		},
+		{
+			name: "When html is empty",
+			args: args{html: ""},
+		},
+		{
+			name: "When html is invalid",
+			args: args{html: "invalid-html"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := GenerateFromHTML(tt.args.html)
+			assert.Nil(t, err)
+			assert.NotNil(t, result)
+			assert.NoError(t, IsPdf(result))
+		})
+	}
+}
+
 func TestMerge(t *testing.T) {
 	type args struct {
 		files [][]byte
