@@ -27,10 +27,10 @@ import (
 //	@license.name	Apache 2.0
 //	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-//	@BasePath	/pdf
-//	@schemes	http https
-//	@produces	application/json application/octet-stream
-//	@consumes	application/json
+// @BasePath	/pdf
+// @schemes	http https
+// @produces	application/json application/octet-stream
+// @consumes	application/json
 func main() {
 	conf, _ := config.InitAppConfig()
 	r := router.New(conf)
