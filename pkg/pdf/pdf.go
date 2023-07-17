@@ -65,8 +65,8 @@ func Merge(files [][]byte) (file []byte, err error) {
 	conf := pdfcpuConfig.NewDefaultConfiguration()
 	var rs []io.ReadSeeker
 	for i, res := range files {
-		if err := IsPdf(res); err != nil {
-			return nil, fmt.Errorf("File number %d is an invalid pdf: %s", i, err.Error())
+		if err := ValidatePdf(res); err != nil {
+			return nil, fmt.Errorf("File number %d is an invalid pdf: %s", i+1, err.Error())
 		}
 		rs = append(rs, io.ReadSeeker(bytes.NewReader(res)))
 	}
@@ -78,7 +78,7 @@ func Merge(files [][]byte) (file []byte, err error) {
 	return buf.Bytes(), nil
 }
 
-func IsPdf(data []byte) error {
+func ValidatePdf(data []byte) error {
 	isInitialPdfBytes := utils.IsByteSubSlice(data[:5], []byte{0x25, 0x50, 0x44, 0x46, 0x2D})
 
 	if !isInitialPdfBytes {

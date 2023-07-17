@@ -34,7 +34,7 @@ func TestGenerateFromHTML(t *testing.T) {
 			result, err := GenerateFromHTML(tt.args.html)
 			assert.Nil(t, err)
 			assert.NotNil(t, result)
-			assert.NoError(t, IsPdf(result))
+			assert.NoError(t, ValidatePdf(result))
 		})
 	}
 }
