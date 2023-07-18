@@ -17,6 +17,7 @@ func New(conf *config.AppConfig) *echo.Echo {
 	}
 
 	e := echo.New()
+	e.Binder = NewFileBinder(e.Binder)
 	e.Use(middleware.LoggerWithConfig(config.GetEchoLogConfig()))
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
