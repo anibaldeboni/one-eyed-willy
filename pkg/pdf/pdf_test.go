@@ -2,6 +2,7 @@ package pdf
 
 import (
 	"errors"
+	"io"
 	"os"
 	"testing"
 
@@ -32,9 +33,10 @@ func TestGenerateFromHTML(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := GenerateFromHTML(tt.args.html)
+			fBytes, _ := io.ReadAll(result)
 			assert.Nil(t, err)
 			assert.NotNil(t, result)
-			assert.NoError(t, ValidatePdf(result))
+			assert.NoError(t, ValidatePdf(fBytes))
 		})
 	}
 }

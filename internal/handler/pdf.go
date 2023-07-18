@@ -32,26 +32,18 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, utils.NewError(err))
 	}
 
-	rawDecodedText, err := base64.StdEncoding.DecodeString(req.HTML)
+	decoded, err := base64.StdEncoding.DecodeString(req.HTML)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	ch := make(chan []byte)
-
-	go func() {
-		defer close(ch)
-		pdf, err := pdf.GenerateFromHTML(string(rawDecodedText))
-		if err == nil {
-			ch <- pdf
-		}
-	}()
+	pdf, err := pdf.GenerateFromHTML(string(decoded))
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	return c.Blob(http.StatusOK, MIMEApplicationPdf, <-ch)
+	return c.Stream(http.StatusOK, MIMEApplicationPdf, pdf)
 }
 
 func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
@@ -88,7 +80,7 @@ func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
 //	@Tags			pdf
 //	@Accept			multipart/form-data
 //	@Produce		application/octet-stream
-//	@param			files	formData	file	true	"this is a pdf file"
+//	@param			files	formData	file	true	"pdf files to merge"
 //	@Success		200
 //	@Failure		400	{object}	utils.Error
 //	@Failure		500	{object}	utils.Error
@@ -111,5 +103,5 @@ func (h *Handler) MergePdfs(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	return c.Blob(http.StatusOK, MIMEApplicationPdf, pdf)
+	return c.Stream(http.StatusOK, MIMEApplicationPdf, pdf)
 }

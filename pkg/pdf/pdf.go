@@ -23,20 +23,20 @@ func sanitizeHTML(html string) string {
 	return p.Sanitize(html)
 }
 
-func GenerateFromHTML(html string) ([]byte, error) {
+func GenerateFromHTML(html string) (io.Reader, error) {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 
-	var buf []byte
+	buf := bytes.Buffer{}
 	if err := chromedp.Run(ctx, printHTMLToPDF(sanitizeHTML(html), &buf)); err != nil {
 		return nil, err
 	}
 
-	return buf, nil
+	return io.Reader(&buf), nil
 
 }
 
-func printHTMLToPDF(html string, res *[]byte) chromedp.Tasks {
+func printHTMLToPDF(html string, res *bytes.Buffer) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.Navigate("about:blank"),
 		chromedp.ActionFunc(func(ctx context.Context) error {
@@ -52,13 +52,13 @@ func printHTMLToPDF(html string, res *[]byte) chromedp.Tasks {
 			if err != nil {
 				return err
 			}
-			*res = buf
+			*res = *bytes.NewBuffer(buf)
 			return nil
 		}),
 	}
 }
 
-func Merge(files [][]byte) (file []byte, err error) {
+func Merge(files [][]byte) (file io.Reader, err error) {
 	pdfcpuConfig.ConfigPath = "disable"
 	pdfcpuLog.DisableLoggers()
 
@@ -75,7 +75,8 @@ func Merge(files [][]byte) (file []byte, err error) {
 	if err = pdfcpuAPI.MergeRaw(rs, &buf, conf); err != nil {
 		return nil, errors.New("Could not merge pdfs. Some files can't be read")
 	}
-	return buf.Bytes(), nil
+
+	return io.Reader(&buf), nil
 }
 
 func ValidatePdf(data []byte) error {

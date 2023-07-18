@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	"github.com/one-eyed-willy/pkg/pdf"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,10 +24,10 @@ func TestGeneratePdfCaseSuccess(t *testing.T) {
 		echo.MIMEApplicationJSON,
 	)
 
-	assert.NoError(t, h.GeneratePdfFromHTML(ctx))
-	if assert.Equal(t, http.StatusOK, rec.Code) {
+	if assert.NotPanics(t, func() { _ = h.GeneratePdfFromHTML(ctx) }) {
+		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, MIMEApplicationPdf, rec.Header().Clone().Get("Content-Type"))
-		assert.Greater(t, len(rec.Body.Bytes()), 0)
+		assert.NoError(t, pdf.ValidatePdf(rec.Body.Bytes()))
 		assert.NotEmpty(t, rec.Body)
 	}
 }
@@ -71,6 +72,8 @@ func TestMergePdfs(t *testing.T) {
 func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
+	defer writer.Close()
+
 	file, err := os.ReadFile("../../testdata/file1.pdf")
 	if err != nil {
 		t.Fatal("testdata/file1.pdf not found")
@@ -82,7 +85,6 @@ func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {
 			t.Fatal("could not write form-data")
 		}
 	}
-	writer.Close()
 
 	return body, writer.Boundary()
 }
