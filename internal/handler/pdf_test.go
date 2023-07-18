@@ -36,16 +36,19 @@ func TestMergePdfs(t *testing.T) {
 		name          string
 		numberOfFiles int
 		httpStatus    int
+		contentType   string
 	}{
 		{
 			name:          "when two files are provided",
 			numberOfFiles: 2,
 			httpStatus:    http.StatusOK,
+			contentType:   MIMEApplicationPdf,
 		},
 		{
 			name:          "when just one file is provided",
 			numberOfFiles: 1,
 			httpStatus:    http.StatusBadRequest,
+			contentType:   echo.MIMEApplicationJSONCharsetUTF8,
 		},
 	}
 	for _, tt := range tests {
@@ -59,7 +62,7 @@ func TestMergePdfs(t *testing.T) {
 
 			if assert.NotPanics(t, func() { _ = h.MergePdfs(ctx) }) {
 				assert.Equal(t, tt.httpStatus, rec.Code)
-				assert.NoError(t, h.MergePdfs(ctx))
+				assert.Equal(t, tt.contentType, rec.Header().Clone().Get("Content-Type"))
 			}
 		})
 	}

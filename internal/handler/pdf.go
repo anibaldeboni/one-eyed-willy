@@ -3,7 +3,6 @@ package handler
 import (
 	"bytes"
 	"encoding/base64"
-	"errors"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -27,8 +26,8 @@ import (
 //	@failure		500	{object}	utils.Error
 //	@Router			/pdf [post]
 func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
+	req := new(createPdfFromHTMLRequest)
 
-	req := &createPdfFromHTMLRequest{}
 	if err := req.bind(c); err != nil {
 		return c.JSON(http.StatusBadRequest, utils.NewError(err))
 	}
@@ -95,22 +94,18 @@ func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
 //	@Failure		500	{object}	utils.Error
 //	@Router			/pdf/merge [post]
 func (h *Handler) MergePdfs(c echo.Context) (err error) {
-	form, err := c.MultipartForm()
-	if err != nil {
-		return err
-	}
-	files := form.File["files"]
+	req := new(mergePdfsRequest)
 
-	if len(files) < 2 {
-		return c.JSON(http.StatusBadRequest, utils.NewError(errors.New("You must provide at least two files to merge")))
+	if err := req.bind(c); err != nil {
+		return c.JSON(http.StatusBadRequest, utils.NewError(err))
 	}
 
-	fileBytes, err := readBytes(files)
+	files, err := readBytes(req.Files)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.Merge(fileBytes)
+	pdf, err := pdf.Merge(files)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
