@@ -1,6 +1,6 @@
 # one-eyed-willy
 
-A go restful api to generate pdf from html
+A web service written in Go to generate pdfs from html and merge multiple files
 
 # What?
 
