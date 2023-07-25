@@ -80,7 +80,7 @@ func Merge(files [][]byte) (file io.Reader, err error) {
 }
 
 func ValidatePdf(data []byte) error {
-	isInitialPdfBytes := utils.IsByteSubSlice(data[:5], []byte{0x25, 0x50, 0x44, 0x46, 0x2D})
+	isInitialPdfBytes := utils.IsSubSlice(data[:5], []byte{0x25, 0x50, 0x44, 0x46, 0x2D})
 
 	if !isInitialPdfBytes {
 		return errors.New("This is not a pdf file")
@@ -97,7 +97,7 @@ func ValidatePdf(data []byte) error {
 			0x0A, // EOL
 		}
 
-		if utils.IsByteSubSlice(data[len(data)-7:], eof1dot3) {
+		if utils.IsSubSlice(data[len(data)-7:], eof1dot3) {
 			return nil
 		}
 		return errors.New("Invalid file terminator pdf v1.3")
@@ -113,7 +113,7 @@ func ValidatePdf(data []byte) error {
 			0x0A, // EOL
 		}
 
-		if utils.IsByteSubSlice(data[len(data)-6:], eof1dot4) {
+		if utils.IsSubSlice(data[len(data)-6:], eof1dot4) {
 			return nil
 		}
 		return errors.New("Invalid file terminator for pdf v1.4")
@@ -123,9 +123,9 @@ func ValidatePdf(data []byte) error {
 }
 
 func isVersion1dot3(data []byte) bool {
-	return utils.IsByteSubSlice(data[5:8], []byte{0x31, 0x2E, 0x33})
+	return utils.IsSubSlice(data[5:8], []byte{0x31, 0x2E, 0x33})
 }
 
 func isVersion1dot4(data []byte) bool {
-	return utils.IsByteSubSlice(data[5:8], []byte{0x31, 0x2E, 0x34})
+	return utils.IsSubSlice(data[5:8], []byte{0x31, 0x2E, 0x34})
 }

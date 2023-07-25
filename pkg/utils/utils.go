@@ -48,9 +48,9 @@ func NotFound() Error {
 	return e
 }
 
-func containBytes(s []byte, e interface{}) bool {
-	for _, a := range s {
-		if a == e {
+func contains[T comparable](slice []T, element T) bool {
+	for _, a := range slice {
+		if a == element {
 			return true
 		}
 	}
@@ -60,12 +60,12 @@ func containBytes(s []byte, e interface{}) bool {
 // # MAY I HAVE YOUR ATTENTION, PLEASE! #
 //
 // DO NOT USE FOR LARGE SLICES
-func IsByteSubSlice(slice []byte, subslice []byte) bool {
+func IsSubSlice[T comparable](slice []T, subslice []T) bool {
 	if len(slice) < len(subslice) {
 		return false
 	}
 	for _, e := range slice {
-		if !containBytes(subslice, e) {
+		if !contains(subslice, e) {
 			return false
 		}
 	}
