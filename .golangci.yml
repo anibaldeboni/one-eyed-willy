@@ -6,6 +6,7 @@ linters:
     - bodyclose
     - misspell
     - revive
+    - gosimple
 linters-settings:
   revive:
     rules:
