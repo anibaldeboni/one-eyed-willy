@@ -53,7 +53,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.25
-	github.com/pdfcpu/pdfcpu v0.4.1
+	github.com/pdfcpu/pdfcpu v0.4.2
 	github.com/swaggo/echo-swagger v1.4.0
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
