@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Tools</title>
+    <!-- Import Material-UI styles -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+  </head>
+  <body>
+    <style>
+      /* Custom Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f5f5f5;
+        font-family: "Roboto", sans-serif;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* height: 100vh; */
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        max-width: 350px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        background-color: #1976d2;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .button:hover {
+        background-color: #1565c0;
+      }
+      .button:first-child {
+        margin-right: 10px;
+      }
+      .button-icon {
+        margin-right: 5px;
+        font-size: 20px;
+      }
+      .button-text {
+        white-space: nowrap;
+      }
+      .navbar {
+        background-color: #1976d2; /* Material-UI blue color */
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+      }
+      .nav-link-container {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+      }
+      .nav-link {
+        margin: 0 15px;
+        color: white;
+        text-decoration: none;
+      }
+    </style>
+    <div class="navbar">
+      <a class="nav-link material-icons" href="/">home</a>
+      <a class="nav-link" href="/pdf">Generate PDF</a>
+      <a class="nav-link" href="/pdf/merge">Merge PDF</a>
+      <a class="nav-link" href="/docs/">Docs</a>
+      <div class="nav-link-container"></div>
+    </div>
+    <div class="container">
+      <a class="button" href="/pdf">
+        <span class="button-icon material-icons">description</span>
+        <span class="button-text">Generate PDF</span>
+      </a>
+      <a class="button" href="/pdf/merge">
+        <span class="button-icon material-icons">merge_type</span>
+        <span class="button-text">Merge PDF</span>
+      </a>
+    </div>
+  </body>
+</html>

@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/labstack/echo/v4"
 	_ "github.com/one-eyed-willy/docs"
 	"github.com/one-eyed-willy/internal/config"
 	"github.com/one-eyed-willy/internal/handler"
@@ -36,11 +35,7 @@ func main() {
 	r := router.New(conf)
 	h := handler.New()
 
-	r.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "Hello there! This is One-Eyed-Willy pdf generator",
-		})
-	})
+	r.GET("/", h.IndexView)
 
 	r.GET("/docs/*", echoSwagger.WrapHandler)
 
