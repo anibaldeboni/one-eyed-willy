@@ -1,0 +1,36 @@
+{{define "home.html"}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PDF Tools</title>
+    {{template "meta.html" .}}
+  </head>
+  <body>
+    {{template "styles.html" .}}
+    <style>
+      /* Custom Styles */
+      .main-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        max-width: 350px;
+      }
+    </style>
+    {{template "navbar.html" .}}
+    <div class="main-container">
+      <a class="button" href="/pdf">
+        <span class="button-icon material-icons">description</span>
+        <span class="button-text">Generate PDF</span>
+      </a>
+      <a class="button" href="/pdf/merge">
+        <span class="button-icon material-icons">merge_type</span>
+        <span class="button-text">Merge PDF</span>
+      </a>
+    </div>
+  </body>
+</html>
+{{end}}

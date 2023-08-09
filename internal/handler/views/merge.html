@@ -1,177 +1,71 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Merge PDFs</title>
-    <!-- Import Material-UI styles -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    />
+    {{template "meta.html" .}}
   </head>
   <body>
+    {{template "styles.html" .}}
     <style>
       /* Custom Styles */
-      body {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: #f5f5f5;
-        font-family: "Roboto", sans-serif;
-      }
       .main-container {
         max-width: 600px;
         width: 90%;
         padding: 20px;
         background-color: white;
         border: 1px solid #ccc;
-        border-radius: 4px;
+        border-radius: 10px;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
       }
       .pdf-input {
-        width: 97%;
+        width: 100%;
         margin: 10px 0;
-      }
-      .button {
-        background-color: #1976d2;
-        color: white;
-        padding: 10px 20px;
-        border: none;
+        border: 1px solid #ccc;
         border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        width: 150px;
-      }
-      .button:hover {
-        background-color: #1565c0;
-      }
-      .button:first-child {
-        margin-right: 10px;
-      }
-      .button-icon {
-        margin-right: 5px;
-        font-size: 20px;
-      }
-      .button-text {
-        white-space: nowrap;
-      }
-      .button-container {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        margin-top: 20px;
-        width: 100%;
-      }
-      .error-message {
-        color: red;
-        display: none;
-        font-size: 14px;
-        margin-top: 5px;
-      }
-      .merged-pdf-container {
-        max-width: 1080px;
-        width: 90%;
-        padding: 20px;
-        background-color: white;
-        border: 1px solid gray;
-        border-radius: 4px;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 20px;
-      }
-      .pdf-iframe {
-        width: 100%;
-        height: 500px;
-        border: none;
-        display: block;
-        margin-bottom: 20px;
-      }
-      .navbar {
-        background-color: #1976d2; /* Material-UI blue color */
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-      }
-      .nav-link-container {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-      }
-      .nav-link {
-        margin: 0 15px;
-        color: white;
-        text-decoration: none;
       }
     </style>
-    <div class="navbar">
-      <a class="nav-link material-icons" href="/">home</a>
-      <a class="nav-link" href="/pdf">Generate PDF</a>
-      <a class="nav-link" href="/pdf/merge">Merge PDF</a>
-      <a class="nav-link" href="/docs/">Docs</a>
-      <div class="nav-link-container"></div>
-    </div>
+    {{template "navbar.html" .}}
     <div class="main-container">
       <input
+        id="pdfInput"
         class="pdf-input"
         type="file"
         multiple
         accept=".pdf"
         name="files"
       />
-      <p class="error-message">Please select at least two PDF files.</p>
+      <div class="error-message" id="errorMessage">
+        <span class="material-icons"> error </span>
+        <span>Please select at least two PDF files.</span>
+      </div>
       <div class="button-container">
-        <button class="button">
+        <button class="button" id="mergeButton">
           <span class="button-icon material-icons">merge_type</span>
           <span class="button-text">Merge PDFs</span>
         </button>
       </div>
     </div>
-
-    <div class="merged-pdf-container">
+    <div class="pdf-container" id="pdfContainer">
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
       <a id="merged-link" target="_blank" rel="noopener noreferrer"
         >Download Merged PDF</a
       >
     </div>
-
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const pdfInput = document.querySelector(".pdf-input");
-        const mergeButton = document.querySelector(".button");
-        const errorMessage = document.querySelector(".error-message");
-        const mergedPdfContainer = document.querySelector(
-          ".merged-pdf-container"
-        );
+        const pdfInput = document.getElementById("pdfInput");
+        const mergeButton = document.getElementById("mergeButton");
+        const errorMessage = document.getElementById("errorMessage");
+        const mergedPdfContainer = document.getElementById("pdfContainer");
         const mergedLink = document.getElementById("merged-link");
         const pdfViewer = document.getElementById("pdfViewer");
 
         mergeButton.addEventListener("click", async () => {
           const selectedFiles = pdfInput.files;
           if (selectedFiles.length < 2) {
-            errorMessage.style.display = "block";
+            errorMessage.style.display = "flex";
             return;
           }
           errorMessage.style.display = "none";

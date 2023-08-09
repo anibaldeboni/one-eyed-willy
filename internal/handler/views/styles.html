@@ -1,0 +1,99 @@
+{{define "styles.html"}}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    font-family: "Roboto", sans-serif;
+  }
+  .error-message {
+    color: red;
+    display: none;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 15px;
+    margin-top: 10px;
+  }
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+  }
+  .button {
+    background-color: #1976d2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    width: 160px;
+  }
+  .button:hover {
+    background-color: #1565c0;
+  }
+  .button:first-child {
+    margin-right: 10px;
+  }
+  .button-icon {
+    margin-right: 5px;
+    font-size: 20px;
+  }
+  .button-text {
+    white-space: nowrap;
+  }
+  .navbar {
+    background-color: #1976d2; /* Material-UI blue color */
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+  }
+  .nav-link-container {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  .nav-link {
+    margin: 0 15px;
+    color: white;
+    text-decoration: none;
+  }
+  .pdf-container {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    width: 90%;
+    max-width: 1080px;
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  .pdf-iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    display: block;
+  }
+  textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+{{end}}

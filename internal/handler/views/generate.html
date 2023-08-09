@@ -1,34 +1,10 @@
+{{define "generate.html"}}
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Generate PDF from HTML</title>
-    <!-- Import Material-UI styles -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    />
+    {{template "meta.html" .}} {{template "styles.html" .}}
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: #f5f5f5;
-        font-family: "Roboto", sans-serif;
-      }
       .main-container {
         display: flex;
         flex-direction: column;
@@ -36,154 +12,41 @@
         width: 90%;
         max-width: 1080px;
         margin-bottom: 20px;
+        margin-top: 20px;
         background-color: white;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 10px;
-      }
-      .error-message-container {
-        display: none;
-        margin-top: 10px;
-        width: 100%;
-      }
-      .error-message {
-        color: #d9534f;
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-      }
-      .error-icon {
-        margin-right: 8px;
-      }
-      .pdf-container {
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        width: 90%;
-        max-width: 1080px;
-        margin-bottom: 20px;
-        background-color: white;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        margin-top: 20px;
-      }
-      .pdf-iframe {
-        width: 100%;
-        height: 500px;
-        border: none;
-        display: block;
-      }
-      .button-container {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        margin-top: 20px;
-        width: 100%;
-      }
-      .button {
-        background-color: #1976d2;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        width: 160px;
-      }
-      .button:hover {
-        background-color: #1565c0;
-      }
-      .button:first-child {
-        margin-right: 10px;
-      }
-      .button-icon {
-        margin-right: 5px;
-        font-size: 20px;
-      }
-      .button-text {
-        white-space: nowrap;
-      }
-      #htmlInput {
-        width: 100%;
-        margin-bottom: 10px;
-        align-items: center;
-        border: 1px solid #ccc;
-      }
-      .navbar {
-        background-color: #1976d2; /* Material-UI blue color */
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-      }
-      .nav-link-container {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-      }
-      .nav-link {
-        margin: 0 15px;
-        color: white;
-        text-decoration: none;
       }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <a class="nav-link material-icons" href="/">home</a>
-      <a class="nav-link" href="/pdf">Generate PDF</a>
-      <a class="nav-link" href="/pdf/merge">Merge PDF</a>
-      <a class="nav-link" href="/docs/">Docs</a>
-      <div class="nav-link-container"></div>
-    </div>
+    {{template "navbar.html" .}}
     <div class="main-container">
       <textarea
-        id="htmlInput"
-        rows="30"
+        id="htmlContent"
+        rows="20"
         placeholder="Enter your HTML content here..."
       ></textarea>
+      <div class="error-message" id="errorMessage">
+        <span class="material-icons"> error </span>
+        <span>PDF generation failed. Please try again.</span>
+      </div>
       <div class="button-container">
         <button id="generatePDF" class="button">
           <span class="button-icon material-icons">description</span>
           <span class="button-text">Generate PDF</span>
         </button>
       </div>
-      <div class="error-message-container" id="errorMessageContainer">
-        <div class="error-message" id="errorMessage">
-          <svg
-            class="error-icon h-6 w-6 text-red-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-            ></path>
-          </svg>
-          <span>PDF generation failed. Please try again.</span>
-        </div>
-      </div>
     </div>
 
-    <div class="pdf-container">
+    <div class="pdf-container" id="pdfContainer">
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
     </div>
 
     <script>
-      const errorMessageContainer = document.getElementById(
-        "errorMessageContainer"
-      );
-      const pdfContainer = document.querySelector(".pdf-container");
+      const errorMessage = document.getElementById("errorMessage");
+      const pdfContainer = document.getElementById("pdfContainer");
       const pdfViewer = document.getElementById("pdfViewer");
 
       document
@@ -213,7 +76,7 @@
               pdfViewer.setAttribute("src", pdfUrl);
               pdfContainer.style.display = "flex"; // Show the PDF container
             } else {
-              errorMessageContainer.style.display = "block"; // Show error message container
+              errorMessage.style.display = "flex"; // Show error message container
             }
           } catch (error) {
             console.error("An error occurred: " + error);
@@ -222,3 +85,4 @@
     </script>
   </body>
 </html>
+{{end}}

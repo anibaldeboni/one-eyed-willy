@@ -35,8 +35,8 @@ func main() {
 	r := router.New(conf)
 	h := handler.New()
 
-	r.GET("/", h.IndexView)
-
+	r.Renderer = h.NewTemplateRegistry()
+	r.GET("/", h.HomeView)
 	r.GET("/docs/*", echoSwagger.WrapHandler)
 
 	h.Register(r.Group(conf.BaseURL))
