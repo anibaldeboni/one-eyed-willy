@@ -83,7 +83,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "file",
-                        "description": "this is a pdf file",
+                        "description": "pdf files to merge",
                         "name": "files",
                         "in": "formData",
                         "required": true

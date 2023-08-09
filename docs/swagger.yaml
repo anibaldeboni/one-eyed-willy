@@ -59,7 +59,7 @@ paths:
       - multipart/form-data
       description: Merges two or more pdfs
       parameters:
-      - description: this is a pdf file
+      - description: pdf files to merge
         in: formData
         name: files
         required: true
