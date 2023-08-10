@@ -11,8 +11,8 @@
         align-items: stretch;
         width: 90%;
         max-width: 1080px;
-        margin-bottom: 20px;
-        margin-top: 20px;
+        margin-bottom: 2em;
+        margin-top: 7em;
         background-color: white;
         padding: 20px;
         border: 1px solid #ccc;
@@ -42,12 +42,18 @@
 
     <div class="pdf-container" id="pdfContainer">
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
+      <div class="text-message">
+        <a id="file-link" target="_blank" rel="noopener noreferrer">
+          <span class="material-icons"> zoom_out_map </span>
+        </a>
+      </div>
     </div>
 
     <script>
       const errorMessage = document.getElementById("errorMessage");
       const pdfContainer = document.getElementById("pdfContainer");
       const pdfViewer = document.getElementById("pdfViewer");
+      const fileLink = document.getElementById("file-link");
 
       document
         .getElementById("generatePDF")
@@ -72,9 +78,10 @@
             });
 
             if (response.ok) {
-              const pdfData = await response.blob();
-              const pdfUrl = URL.createObjectURL(pdfData);
-              pdfViewer.setAttribute("src", pdfUrl);
+              const blob = await response.blob();
+              const blobUrl = URL.createObjectURL(blob);
+              pdfViewer.setAttribute("src", blobUrl);
+              fileLink.href = blobUrl;
               pdfContainer.style.display = "flex"; // Show the PDF container
             } else {
               errorMessage.style.display = "flex"; // Show error message container

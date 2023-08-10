@@ -18,6 +18,7 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        margin-top: 7em;
       }
       .pdf-input {
         width: 100%;
@@ -49,17 +50,19 @@
     </div>
     <div class="pdf-container" id="pdfContainer">
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
-      <a id="merged-link" target="_blank" rel="noopener noreferrer"
-        >Download Merged PDF</a
-      >
+      <div class="text-message">
+        <a id="file-link" target="_blank" rel="noopener noreferrer">
+          <span class="material-icons"> zoom_out_map </span>
+        </a>
+      </div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const pdfInput = document.getElementById("pdfInput");
         const mergeButton = document.getElementById("mergeButton");
         const errorMessage = document.getElementById("errorMessage");
-        const mergedPdfContainer = document.getElementById("pdfContainer");
-        const mergedLink = document.getElementById("merged-link");
+        const pdfContainer = document.getElementById("pdfContainer");
+        const fileLink = document.getElementById("file-link");
         const pdfViewer = document.getElementById("pdfViewer");
 
         mergeButton.addEventListener("click", async () => {
@@ -85,9 +88,8 @@
               const blob = await response.blob();
               const blobUrl = URL.createObjectURL(blob);
               pdfViewer.setAttribute("src", blobUrl);
-              mergedLink.href = blobUrl;
-              mergedLink.style.display = "block";
-              mergedPdfContainer.style.display = "block";
+              fileLink.href = blobUrl;
+              pdfContainer.style.display = "flex";
             } else {
               console.error("PDF merging failed.");
             }
