@@ -54,6 +54,7 @@
         .addEventListener("click", async () => {
           const htmlContent = document.getElementById("htmlContent").value;
           const base64HtmlContent = btoa(htmlContent);
+          errorMessage.style.display = "none";
 
           const payload = {
             html: base64HtmlContent,
