@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/one-eyed-willy/internal/config"
-	"github.com/one-eyed-willy/internal/router"
+	"github.com/one-eyed-willy/internal/web"
 )
 
 var (
@@ -14,5 +14,5 @@ var (
 func setup() {
 	conf, _ := config.InitAppConfig()
 	h, _ = New()
-	e = router.New(conf)
+	e = web.New(conf)
 }

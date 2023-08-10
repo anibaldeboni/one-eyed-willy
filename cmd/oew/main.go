@@ -11,9 +11,8 @@ import (
 	_ "github.com/one-eyed-willy/docs"
 	"github.com/one-eyed-willy/internal/config"
 	"github.com/one-eyed-willy/internal/handler"
-	"github.com/one-eyed-willy/internal/router"
+	"github.com/one-eyed-willy/internal/web"
 	"github.com/one-eyed-willy/pkg/logger"
-	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 //	@title			One-Eyed-Willy REST pdf generation API
@@ -33,21 +32,17 @@ import (
 // @consumes	application/json
 func main() {
 	conf, _ := config.InitAppConfig()
-	r := router.New(conf)
+	w := web.New(conf)
 	h, err := handler.New()
 	if err != nil {
 		logger.Log().Fatal(err)
 	}
-	defer h.Cancel()
+	defer h.CancelPdfRenderContext()
 
-	r.Renderer = h.NewTemplateRegistry()
-	r.GET("/", h.HomeView)
-	r.GET("/docs/*", echoSwagger.WrapHandler)
-
-	h.Register(r.Group(conf.BaseURL))
+	h.Register(w, conf)
 
 	go func() {
-		if err := r.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
+		if err := w.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
 			logger.Log().Fatal("shutting down the server")
 		}
 	}()
@@ -62,7 +57,7 @@ func main() {
 		fmt.Println("\nshutting down the server, good bye!")
 		cancel()
 	}()
-	if err := r.Shutdown(ctx); err != nil {
-		r.Logger.Fatal(err)
+	if err := w.Shutdown(ctx); err != nil {
+		w.Logger.Fatal(err)
 	}
 }

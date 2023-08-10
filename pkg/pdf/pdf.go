@@ -24,19 +24,13 @@ func sanitizeHTML(html string) string {
 }
 
 func NewContext() (context.Context, context.CancelFunc, error) {
-	ctx, cancel := chromedp.NewContext(context.Background())
-	var success bool
-	defer func() {
-		if !success {
-			_ = chromedp.Cancel(ctx)
-			cancel()
-		}
-	}()
-	err := chromedp.Run(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-	success = true
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("headless", true),
+		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("blink-settings", "scriptEnabled=false"),
+	)
+	ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
+
 	return ctx, cancel, nil
 }
 

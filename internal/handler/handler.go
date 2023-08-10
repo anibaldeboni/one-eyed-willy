@@ -7,8 +7,8 @@ import (
 )
 
 type Handler struct {
-	Context context.Context
-	Cancel  context.CancelFunc
+	PdfRenderContext       context.Context
+	CancelPdfRenderContext context.CancelFunc
 }
 
 const (
@@ -20,5 +20,5 @@ func New() (*Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Handler{Context: ctx, Cancel: cancel}, nil
+	return &Handler{PdfRenderContext: ctx, CancelPdfRenderContext: cancel}, nil
 }
