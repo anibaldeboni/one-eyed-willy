@@ -13,6 +13,6 @@ var (
 
 func setup() {
 	conf, _ := config.InitAppConfig()
-	h = &Handler{}
+	h, _ = New()
 	e = router.New(conf)
 }

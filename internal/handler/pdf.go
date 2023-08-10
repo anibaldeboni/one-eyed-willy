@@ -37,7 +37,7 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.GenerateFromHTML(string(decoded))
+	pdf, err := pdf.GenerateFromHTML(h.Context, string(decoded))
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))

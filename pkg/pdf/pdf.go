@@ -23,9 +23,32 @@ func sanitizeHTML(html string) string {
 	return p.Sanitize(html)
 }
 
-func GenerateFromHTML(html string) (io.Reader, error) {
+func NewContext() (context.Context, context.CancelFunc, error) {
 	ctx, cancel := chromedp.NewContext(context.Background())
+	var success bool
+	defer func() {
+		if !success {
+			_ = chromedp.Cancel(ctx)
+			cancel()
+		}
+	}()
+	err := chromedp.Run(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	success = true
+	return ctx, cancel, nil
+}
+
+func GenerateFromHTML(ctx context.Context, html string) (io.Reader, error) {
+	// ctx, cancel := chromedp.NewContext(context.Background())
+	// defer cancel()
+
+	ctx, cancel := chromedp.NewContext(ctx)
 	defer cancel()
+	defer func() {
+		_ = chromedp.Cancel(ctx)
+	}()
 
 	buf := bytes.Buffer{}
 	if err := chromedp.Run(ctx, printHTMLToPDF(sanitizeHTML(html), &buf)); err != nil {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -33,7 +34,11 @@ import (
 func main() {
 	conf, _ := config.InitAppConfig()
 	r := router.New(conf)
-	h := handler.New()
+	h, err := handler.New()
+	if err != nil {
+		logger.Log().Fatal(err)
+	}
+	defer h.Cancel()
 
 	r.Renderer = h.NewTemplateRegistry()
 	r.GET("/", h.HomeView)
@@ -54,7 +59,7 @@ func main() {
 	<-quit
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer func() {
-		logger.Log().Info("shutting down server, good bye!")
+		fmt.Println("\nshutting down the server, good bye!")
 		cancel()
 	}()
 	if err := r.Shutdown(ctx); err != nil {
