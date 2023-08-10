@@ -9,6 +9,6 @@ import (
 func GetEchoLogConfig() middleware.LoggerConfig {
 	echoLogConf := middleware.DefaultLoggerConfig
 	echoLogConf.CustomTimeFormat = time.RFC3339
-	// echoLogConf.Format = fmt.Sprintln(`{"level":"info","source":"echo","id":"${id}","mt":"${method}","uri":"${uri}","st":${status},"e":"${error}","lc":"${latency_human}","ts":"${time_custom}"}`)
+	// echoLogConf.Format = `{ "@timestamp": "${time_rfc3339}" "request_id": "${id}", "latency": ${latency}, "status": "${status}", "method": "${method}", "uri": "${uri}", "error": "${error}" }`
 	return echoLogConf
 }
