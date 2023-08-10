@@ -3,7 +3,7 @@ SRC=$(shell find . -name "*.go")
 export APP=one-eyed-willy
 export LDFLAGS="-w -s"
 
-.PHONY: lint test install_deps install_linter install_swag clean
+.PHONY: lint test install_deps install_linter install_swag clean watch
 
 default: all
 
@@ -32,6 +32,9 @@ build-static:
 
 clean:
 	rm -rf $(BIN)
+
+watch:
+	air
 
 install_linter:
 	@if [ $(shell which golangci-lint) = "" ]; then\
