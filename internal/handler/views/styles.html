@@ -11,10 +11,10 @@
     font-family: "Roboto", sans-serif;
     min-height: 100vh;
     margin-bottom: 2em;
+    margin-top: 5em;
   }
   .blank-space {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin: 1em;
   }
   .horizontal-align {
     display: flex;
@@ -27,7 +27,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* min-height: 100vh; */
   }
   .container {
     display: flex;
@@ -35,28 +34,28 @@
     flex-direction: column;
     align-items: stretch;
     background-color: white;
-    padding: 20px;
+    padding: 1em;
     border: 1px solid #ccc;
     border-radius: 10px;
-    margin-top: 5em;
+    /* margin-top: 5em; */
+  }
+  .container:nth-child(even) {
+    margin-top: 2em;
   }
   .container-small {
-    max-width: 23em;
+    max-width: 25em;
   }
   .container-large {
     width: 90%;
     max-width: 50em;
-  }
-  .no-margin-top {
-    margin-top: 0;
   }
   .error-message {
     color: red;
     display: none;
     align-items: center;
     justify-content: flex-start;
-    font-size: 15px;
-    margin-top: 10px;
+    font-size: 1em;
+    margin-top: 1em;
   }
   .text-message {
     color: #1976d2;
@@ -64,7 +63,7 @@
     align-items: center;
     justify-content: flex-end;
     font-size: 1em;
-    margin-top: 10px;
+    margin-top: 1em;
     width: 100%;
     white-space: nowrap;
   }
@@ -72,8 +71,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-top: 20px;
-    width: 100%;
+    margin-top: 1em;
   }
   .button {
     background-color: #1976d2;
@@ -86,17 +84,16 @@
     display: flex;
     align-items: center;
     white-space: nowrap;
-    width: 160px;
   }
   .button:hover {
     background-color: #1565c0;
   }
-  .button:first-child {
-    margin-right: 10px;
+  .button:nth-child(even) {
+    margin-left: 1em;
   }
   .button-icon {
-    margin-right: 5px;
-    font-size: 20px;
+    margin-right: 0.5em;
+    font-size: 1.5em;
   }
   .button-text {
     white-space: nowrap;

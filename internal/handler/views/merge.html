@@ -6,7 +6,7 @@
   </head>
   <body>
     {{template "styles.html" .}} {{template "navbar.html" .}}
-    <div class="container center-screen container-large">
+    <div class="container container-large">
       <input
         id="pdfInput"
         class="input-box"
@@ -26,11 +26,7 @@
         </button>
       </div>
     </div>
-    <div class="blank-space"></div>
-    <div
-      class="container no-margin-top center-screen container-large"
-      id="pdfContainer"
-    >
+    <div class="container container-large" id="pdfContainer">
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
       <div class="text-message">
         <a id="file-link" target="_blank" rel="noopener noreferrer">
