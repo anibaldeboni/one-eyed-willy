@@ -1,32 +1,22 @@
 {{define "styles.html"}}
 <style>
   body {
-    margin: 0;
-    padding: 0;
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
+    padding: 0;
     background-color: #f5f5f5;
     font-family: "Roboto", sans-serif;
     min-height: 100vh;
     margin-bottom: 2em;
     margin-top: 5em;
   }
-  .blank-space {
-    margin: 1em;
-  }
   .horizontal-align {
     display: flex;
     justify-content: center;
     align-items: center;
     white-space: nowrap;
-  }
-  .center-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
   }
   .container {
     display: flex;
@@ -37,7 +27,6 @@
     padding: 1em;
     border: 1px solid #ccc;
     border-radius: 10px;
-    /* margin-top: 5em; */
   }
   .container:nth-child(even) {
     margin-top: 2em;
@@ -50,22 +39,26 @@
     max-width: 50em;
   }
   .error-message {
-    color: red;
+    color: #d32f2f;
     display: none;
     align-items: center;
     justify-content: flex-start;
     font-size: 1em;
     margin-top: 1em;
   }
-  .text-message {
-    color: #1976d2;
+  .icon {
+    color: #2196f3;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    font-size: 1em;
-    margin-top: 1em;
+    font-size: 2em;
+    margin-top: 0.5em;
     width: 100%;
     white-space: nowrap;
+  }
+  .icon:hover {
+    color: #1565c0;
+    font-size: 2em;
   }
   .button-container {
     display: flex;
@@ -74,7 +67,8 @@
     margin-top: 1em;
   }
   .button {
-    background-color: #1976d2;
+    /* background-color: #1976d2; */
+    background-color: #2196f3;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -86,7 +80,8 @@
     white-space: nowrap;
   }
   .button:hover {
-    background-color: #1565c0;
+    /* background-color: #1565c0; */
+    background-color: #1976d2;
   }
   .button:nth-child(even) {
     margin-left: 1em;
@@ -99,7 +94,9 @@
     white-space: nowrap;
   }
   .navbar {
-    background-color: #1976d2; /* Material-UI blue color */
+    background-color: #1976d2;
+    /* box-shadow: 0 5px rgba(0, 0, 0, 0.1); */
+    border-bottom: 5px solid #2196f3;
     width: 100%;
     position: fixed;
     top: 0;
