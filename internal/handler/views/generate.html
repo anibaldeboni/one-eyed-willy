@@ -4,26 +4,12 @@
   <head>
     <title>Generate PDF from HTML</title>
     {{template "meta.html" .}} {{template "styles.html" .}}
-    <style>
-      .main-container {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        width: 90%;
-        max-width: 1080px;
-        margin-bottom: 2em;
-        margin-top: 7em;
-        background-color: white;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-      }
-    </style>
   </head>
   <body>
     {{template "navbar.html" .}}
-    <div class="main-container">
+    <div class="container center-screen container-large">
       <textarea
+        class="input-box"
         id="htmlContent"
         rows="20"
         placeholder="Enter your HTML content here..."
@@ -39,8 +25,11 @@
         </button>
       </div>
     </div>
-
-    <div class="pdf-container" id="pdfContainer">
+    <div class="blank-space"></div>
+    <div
+      class="container no-margin-top center-screen container-large"
+      id="pdfContainer"
+    >
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
       <div class="text-message">
         <a id="file-link" target="_blank" rel="noopener noreferrer">
@@ -50,46 +39,49 @@
     </div>
 
     <script>
-      const errorMessage = document.getElementById("errorMessage");
-      const pdfContainer = document.getElementById("pdfContainer");
-      const pdfViewer = document.getElementById("pdfViewer");
-      const fileLink = document.getElementById("file-link");
+      document.addEventListener("DOMContentLoaded", () => {
+        const errorMessage = document.getElementById("errorMessage");
+        const pdfContainer = document.getElementById("pdfContainer");
+        const pdfViewer = document.getElementById("pdfViewer");
+        const fileLink = document.getElementById("file-link");
+        pdfContainer.style.display = "none";
 
-      document
-        .getElementById("generatePDF")
-        .addEventListener("click", async () => {
-          const htmlContent = document.getElementById("htmlContent").value;
-          const base64HtmlContent = btoa(htmlContent);
-          errorMessage.style.display = "none";
+        document
+          .getElementById("generatePDF")
+          .addEventListener("click", async () => {
+            const htmlContent = document.getElementById("htmlContent").value;
+            const base64HtmlContent = btoa(htmlContent);
+            errorMessage.style.display = "none";
 
-          const payload = {
-            html: base64HtmlContent,
-          };
+            const payload = {
+              html: base64HtmlContent,
+            };
 
-          const apiUrl = "/pdf";
+            const apiUrl = "/pdf";
 
-          try {
-            const response = await fetch(apiUrl, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(payload),
-            });
+            try {
+              const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              });
 
-            if (response.ok) {
-              const blob = await response.blob();
-              const blobUrl = URL.createObjectURL(blob);
-              pdfViewer.setAttribute("src", blobUrl);
-              fileLink.href = blobUrl;
-              pdfContainer.style.display = "flex"; // Show the PDF container
-            } else {
-              errorMessage.style.display = "flex"; // Show error message container
+              if (response.ok) {
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                pdfViewer.setAttribute("src", blobUrl);
+                fileLink.href = blobUrl;
+                pdfContainer.style.display = "flex"; // Show the PDF container
+              } else {
+                errorMessage.style.display = "flex"; // Show error message container
+              }
+            } catch (error) {
+              console.error("An error occurred: " + error);
             }
-          } catch (error) {
-            console.error("An error occurred: " + error);
-          }
-        });
+          });
+      });
     </script>
   </body>
 </html>

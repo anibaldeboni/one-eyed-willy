@@ -6,31 +6,18 @@
     {{template "meta.html" .}}
   </head>
   <body>
-    {{template "styles.html" .}}
-    <style>
-      /* Custom Styles */
-      .main-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: white;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        max-width: 350px;
-        margin-top: 7em;
-      }
-    </style>
-    {{template "navbar.html" .}}
-    <div class="main-container">
-      <a class="button" href="/pdf">
-        <span class="button-icon material-icons">description</span>
-        <span class="button-text">Generate PDF</span>
-      </a>
-      <a class="button" href="/pdf/merge">
-        <span class="button-icon material-icons">merge_type</span>
-        <span class="button-text">Merge PDF</span>
-      </a>
+    {{template "styles.html" .}} {{template "navbar.html" .}}
+    <div class="container screen-center container-small">
+      <div class="horizontal-align">
+        <a class="button" href="/pdf">
+          <span class="button-icon material-icons">description</span>
+          <span class="button-text">Generate PDF</span>
+        </a>
+        <a class="button" href="/pdf/merge">
+          <span class="button-icon material-icons">merge_type</span>
+          <span class="button-text">Merge PDF</span>
+        </a>
+      </div>
     </div>
   </body>
 </html>

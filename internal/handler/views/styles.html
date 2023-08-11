@@ -9,6 +9,46 @@
     align-items: center;
     background-color: #f5f5f5;
     font-family: "Roboto", sans-serif;
+    min-height: 100vh;
+    margin-bottom: 2em;
+  }
+  .blank-space {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  .horizontal-align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .center-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* min-height: 100vh; */
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top: 5em;
+  }
+  .container-small {
+    max-width: 23em;
+  }
+  .container-large {
+    width: 90%;
+    max-width: 50em;
+  }
+  .no-margin-top {
+    margin-top: 0;
   }
   .error-message {
     color: red;
@@ -81,28 +121,13 @@
     color: white;
     text-decoration: none;
   }
-  .pdf-container {
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    width: 90%;
-    max-width: 1080px;
-
-    margin-bottom: 20px;
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    margin-top: 2em;
-  }
   .pdf-iframe {
-    width: 100%;
     height: 50em;
     border: 1px solid #ccc;
     border-radius: 4px;
     display: flex;
   }
-  textarea {
+  .input-box {
     border: 1px solid #ccc;
     border-radius: 4px;
   }

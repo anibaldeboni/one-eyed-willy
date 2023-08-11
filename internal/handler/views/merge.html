@@ -5,33 +5,11 @@
     {{template "meta.html" .}}
   </head>
   <body>
-    {{template "styles.html" .}}
-    <style>
-      /* Custom Styles */
-      .main-container {
-        max-width: 600px;
-        width: 90%;
-        padding: 20px;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        margin-top: 7em;
-      }
-      .pdf-input {
-        width: 100%;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-    </style>
-    {{template "navbar.html" .}}
-    <div class="main-container">
+    {{template "styles.html" .}} {{template "navbar.html" .}}
+    <div class="container center-screen container-large">
       <input
         id="pdfInput"
-        class="pdf-input"
+        class="input-box"
         type="file"
         multiple
         accept=".pdf"
@@ -48,7 +26,11 @@
         </button>
       </div>
     </div>
-    <div class="pdf-container" id="pdfContainer">
+    <div class="blank-space"></div>
+    <div
+      class="container no-margin-top center-screen container-large"
+      id="pdfContainer"
+    >
       <iframe id="pdfViewer" class="pdf-iframe"></iframe>
       <div class="text-message">
         <a id="file-link" target="_blank" rel="noopener noreferrer">
@@ -64,6 +46,7 @@
         const pdfContainer = document.getElementById("pdfContainer");
         const fileLink = document.getElementById("file-link");
         const pdfViewer = document.getElementById("pdfViewer");
+        pdfContainer.style.display = "none";
 
         mergeButton.addEventListener("click", async () => {
           const selectedFiles = pdfInput.files;
