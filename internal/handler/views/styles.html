@@ -40,7 +40,6 @@
   }
   .error-message {
     color: #d32f2f;
-    display: none;
     align-items: center;
     justify-content: flex-start;
     font-size: 1em;
@@ -62,12 +61,11 @@
   }
   .button-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     margin-top: 1em;
   }
   .button {
-    /* background-color: #1976d2; */
     background-color: #2196f3;
     color: white;
     padding: 10px 20px;
@@ -80,7 +78,6 @@
     white-space: nowrap;
   }
   .button:hover {
-    /* background-color: #1565c0; */
     background-color: #1976d2;
   }
   .button:nth-child(even) {
@@ -95,7 +92,6 @@
   }
   .navbar {
     background-color: #1976d2;
-    /* box-shadow: 0 5px rgba(0, 0, 0, 0.1); */
     border-bottom: 5px solid #2196f3;
     width: 100%;
     position: fixed;
@@ -124,6 +120,34 @@
   .input-box {
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+  .spinner-container {
+    display: flex;
+    height: 1em;
+    width: 1em;
+  }
+  .spinner {
+    font-size: 2px;
+    width: 10em;
+    height: 10em;
+    border-top: 1em solid #1976d2;
+    border-right: 1em solid transparent;
+    border-radius: 50%;
+    margin: auto;
+    animation: spinner 0.6s linear infinite;
+  }
+  .head {
+    width: 1em;
+    height: 1em;
+    background-color: #1976d2;
+    border-radius: 50%;
+    margin-left: 8.5em;
+    margin-top: 0.5em;
+  }
+  @keyframes spinner {
+    100% {
+      transform: rotate(360deg);
+    }
   }
 </style>
 {{end}}

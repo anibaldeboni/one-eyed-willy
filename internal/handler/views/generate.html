@@ -14,11 +14,17 @@
         rows="20"
         placeholder="Enter your HTML content here..."
       ></textarea>
+
       <div class="error-message" id="error-container">
         <span class="material-icons"> error </span>
         <span id="error">error-message</span>
       </div>
       <div class="button-container">
+        <div class="spinner-container" id="spinner-container">
+          <div class="spinner" id="spinner">
+            <div class="head"></div>
+          </div>
+        </div>
         <button id="generatePDF" class="button">
           <span class="button-icon material-icons">description</span>
           <span class="button-text">Generate PDF</span>
@@ -40,24 +46,30 @@
         const fileLink = document.getElementById("file-link");
         const htmlContent = document.getElementById("htmlContent");
         const errorMessage = document.getElementById("error");
+        const spinner = document.getElementById("spinner");
         const showError = (message) => {
           errorMessage.innerText = message;
           errorContainer.style.display = "flex";
         };
-        const reset = () => {
+        const showSpinner = (show) => {
+          spinner.style.display = show ? "flex" : "none";
+        };
+        const clear = () => {
           pdfContainer.style.display = "none";
           errorContainer.style.display = "none";
+          showSpinner(false);
         };
-        reset();
+        clear();
 
         document
           .getElementById("generatePDF")
           .addEventListener("click", async () => {
-            reset();
+            clear();
             if (!htmlContent.value) {
               showError("Your HTML is empty.");
               return;
             }
+            showSpinner(true);
 
             try {
               const response = await fetch("/pdf", {
@@ -81,6 +93,7 @@
               showError("PDF generation failed. Unexpected error");
               console.error(`An error occurred: ${error}`);
             }
+            showSpinner(false);
           });
       });
     </script>
