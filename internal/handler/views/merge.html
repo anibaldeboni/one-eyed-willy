@@ -15,11 +15,11 @@
         accept=".pdf"
         name="files"
       />
-      <div class="error-message" id="error-container">
-        <span class="material-icons"> error </span>
-        <span id="error">error-message</span>
-      </div>
-      <div class="button-container">
+      <div class="inline-container">
+        <div class="error-message" id="error-container">
+          <span class="material-icons"> error </span>
+          <span id="error">error-message</span>
+        </div>
         <div class="spinner-container" id="spinner-container">
           <div class="spinner" id="spinner">
             <div class="head"></div>
@@ -68,11 +68,11 @@
           const selectedFiles = pdfInput.files;
           if (selectedFiles.length < 2) {
             showError("Please select at least two PDF files.");
+            showSpinner(false);
             return;
           }
 
           const formData = new FormData();
-
           for (let i = 0; i < selectedFiles.length; i++) {
             formData.append("files", selectedFiles[i]);
           }

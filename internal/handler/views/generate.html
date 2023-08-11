@@ -6,7 +6,7 @@
     {{template "meta.html" .}}
   </head>
   <body>
-    {{template "styles.html" .}}{{template "navbar.html" .}}
+    {{template "styles.html" .}} {{template "navbar.html" .}}
     <div class="container container-large">
       <textarea
         class="input-box"
@@ -14,12 +14,11 @@
         rows="20"
         placeholder="Enter your HTML content here..."
       ></textarea>
-
-      <div class="error-message" id="error-container">
-        <span class="material-icons"> error </span>
-        <span id="error">error-message</span>
-      </div>
-      <div class="button-container">
+      <div class="inline-container">
+        <div class="error-message" id="error-container">
+          <span class="material-icons"> error </span>
+          <span id="error">error-message</span>
+        </div>
         <div class="spinner-container" id="spinner-container">
           <div class="spinner" id="spinner">
             <div class="head"></div>
