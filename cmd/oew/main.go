@@ -43,7 +43,7 @@ func main() {
 
 	go func() {
 		if err := w.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
-			logger.Log().Fatal("shutting down the server")
+			logger.Log().Fatalf("shutting down the server: %v", err)
 		}
 	}()
 
