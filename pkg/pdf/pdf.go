@@ -10,6 +10,7 @@ import (
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/one-eyed-willy/pkg/logger"
 	"github.com/one-eyed-willy/pkg/utils"
 	pdfcpuAPI "github.com/pdfcpu/pdfcpu/pkg/api"
 	pdfcpuLog "github.com/pdfcpu/pdfcpu/pkg/log"
@@ -35,10 +36,7 @@ func NewContext() (context.Context, context.CancelFunc, error) {
 }
 
 func GenerateFromHTML(ctx context.Context, html string) (io.Reader, error) {
-	// ctx, cancel := chromedp.NewContext(context.Background())
-	// defer cancel()
-
-	ctx, cancel := chromedp.NewContext(ctx)
+	ctx, cancel := chromedp.NewContext(ctx, chromedp.WithLogf(logger.Log().Infof))
 	defer cancel()
 	defer func() {
 		_ = chromedp.Cancel(ctx)

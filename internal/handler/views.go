@@ -56,6 +56,7 @@ func (h *Handler) loadTemplates() (templates Templates, err error) {
 	return templates, nil
 }
 
+// HomeView godoc
 func (h *Handler) HomeView(c echo.Context) error {
 	return c.Render(http.StatusOK, "home.html", nil)
 }
