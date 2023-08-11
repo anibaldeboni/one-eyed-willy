@@ -15,9 +15,9 @@
         accept=".pdf"
         name="files"
       />
-      <div class="error-message" id="errorMessage">
+      <div class="error-message" id="error-container">
         <span class="material-icons"> error </span>
-        <span>Please select at least two PDF files.</span>
+        <span id="error">error-message</span>
       </div>
       <div class="button-container">
         <button class="button" id="mergeButton">
@@ -36,21 +36,32 @@
       document.addEventListener("DOMContentLoaded", () => {
         const pdfInput = document.getElementById("pdfInput");
         const mergeButton = document.getElementById("mergeButton");
-        const errorMessage = document.getElementById("errorMessage");
+        const errorContainer = document.getElementById("error-container");
         const pdfContainer = document.getElementById("pdfContainer");
         const fileLink = document.getElementById("file-link");
         const pdfViewer = document.getElementById("pdfViewer");
-        pdfContainer.style.display = "none";
+        const errorMessage = document.getElementById("error");
+        const reset = () => {
+          pdfContainer.style.display = "none";
+          errorContainer.style.display = "none";
+        };
+        reset();
+
+        const showError = (message) => {
+          errorMessage.innerText = message;
+          errorContainer.style.display = "flex";
+        };
 
         mergeButton.addEventListener("click", async () => {
+          reset();
           const selectedFiles = pdfInput.files;
           if (selectedFiles.length < 2) {
-            errorMessage.style.display = "flex";
+            showError("Please select at least two PDF files.");
             return;
           }
-          errorMessage.style.display = "none";
 
           const formData = new FormData();
+
           for (let i = 0; i < selectedFiles.length; i++) {
             formData.append("files", selectedFiles[i]);
           }
@@ -68,10 +79,11 @@
               fileLink.href = blobUrl;
               pdfContainer.style.display = "flex";
             } else {
-              console.error("PDF merging failed.");
+              showError("PDF merging failed.");
             }
           } catch (error) {
-            console.error("An error occurred:", error);
+            showError("PDF merging failed. Unexpected error.");
+            console.error(`An error occurred: ${error}`);
           }
         });
       });

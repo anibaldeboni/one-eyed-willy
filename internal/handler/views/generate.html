@@ -14,9 +14,9 @@
         rows="20"
         placeholder="Enter your HTML content here..."
       ></textarea>
-      <div class="error-message" id="errorMessage">
+      <div class="error-message" id="error-container">
         <span class="material-icons"> error </span>
-        <span>PDF generation failed. Please try again.</span>
+        <span id="error">error-message</span>
       </div>
       <div class="button-container">
         <button id="generatePDF" class="button">
@@ -34,32 +34,38 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const errorMessage = document.getElementById("errorMessage");
+        const errorContainer = document.getElementById("error-container");
         const pdfContainer = document.getElementById("pdfContainer");
         const pdfViewer = document.getElementById("pdfViewer");
         const fileLink = document.getElementById("file-link");
-        pdfContainer.style.display = "none";
+        const htmlContent = document.getElementById("htmlContent");
+        const errorMessage = document.getElementById("error");
+        const showError = (message) => {
+          errorMessage.innerText = message;
+          errorContainer.style.display = "flex";
+        };
+        const reset = () => {
+          pdfContainer.style.display = "none";
+          errorContainer.style.display = "none";
+        };
+        reset();
 
         document
           .getElementById("generatePDF")
           .addEventListener("click", async () => {
-            const htmlContent = document.getElementById("htmlContent").value;
-            const base64HtmlContent = btoa(htmlContent);
-            errorMessage.style.display = "none";
-
-            const payload = {
-              html: base64HtmlContent,
-            };
-
-            const apiUrl = "/pdf";
+            reset();
+            if (!htmlContent.value) {
+              showError("Your HTML is empty.");
+              return;
+            }
 
             try {
-              const response = await fetch(apiUrl, {
+              const response = await fetch("/pdf", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({ html: btoa(htmlContent.value) }),
               });
 
               if (response.ok) {
@@ -69,10 +75,11 @@
                 fileLink.href = blobUrl;
                 pdfContainer.style.display = "flex"; // Show the PDF container
               } else {
-                errorMessage.style.display = "flex"; // Show error message container
+                showError("PDF generation failed. Please try again.");
               }
             } catch (error) {
-              console.error("An error occurred: " + error);
+              showError("PDF generation failed. Unexpected error");
+              console.error(`An error occurred: ${error}`);
             }
           });
       });
