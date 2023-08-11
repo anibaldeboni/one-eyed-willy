@@ -3,7 +3,7 @@ SRC=$(shell find . -name "*.go")
 export APP=one-eyed-willy
 export LDFLAGS="-w -s"
 
-.PHONY: lint test install_deps install_linter install_swag clean watch
+.PHONY: lint test install_deps install_linter install_swag clean watch install_air
 
 default: all
 
@@ -33,15 +33,20 @@ build-static:
 clean:
 	rm -rf $(BIN)
 
-watch:
+watch: install_air
 	air
 
 install_linter:
-	@if [ $(shell which golangci-lint) = "" ]; then\
+	@if [ "$(shell which golangci-lint)" = "" ]; then\
 		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.53.3;\
 	fi
 	
 install_swag:
-	@if [ $(shell which swag) = "" ]; then\
+	@if [ "$(shell which swag)" = "" ]; then\
 		go install github.com/swaggo/swag/cmd/swag@latest;\
+	fi
+
+install_air:
+	@if [ "$(shell which air)" = "" ]; then\
+		go install github.com/cosmtrek/air@latest;\
 	fi
