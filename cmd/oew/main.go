@@ -33,11 +33,8 @@ import (
 func main() {
 	conf, _ := config.InitAppConfig()
 	w := web.New(conf)
-	h, err := handler.New()
-	if err != nil {
-		logger.Log().Fatal(err)
-	}
-	defer h.CancelPdfRenderContext()
+	h := handler.New()
+	defer h.PdfRender.Cancel()
 
 	h.Register(w, conf)
 

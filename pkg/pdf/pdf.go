@@ -24,7 +24,12 @@ func sanitizeHTML(html string) string {
 	return p.Sanitize(html)
 }
 
-func NewContext() (context.Context, context.CancelFunc, error) {
+type PdfRender struct {
+	Context context.Context
+	Cancel  context.CancelFunc
+}
+
+func NewRender() *PdfRender {
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("headless", true),
 		chromedp.Flag("disable-gpu", true),
@@ -32,7 +37,7 @@ func NewContext() (context.Context, context.CancelFunc, error) {
 	)
 	ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 
-	return ctx, cancel, nil
+	return &PdfRender{Context: ctx, Cancel: cancel}
 }
 
 func GenerateFromHTML(ctx context.Context, html string) (io.Reader, error) {

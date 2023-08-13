@@ -13,6 +13,6 @@ var (
 
 func setup() {
 	conf, _ := config.InitAppConfig()
-	h, _ = New()
+	h = New()
 	e = web.New(conf)
 }

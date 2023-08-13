@@ -10,7 +10,7 @@ import (
 )
 
 func TestGenerateFromHTML(t *testing.T) {
-	ctx, _, _ := NewContext()
+	pdfRender := NewRender()
 	type args struct {
 		html string
 	}
@@ -33,7 +33,7 @@ func TestGenerateFromHTML(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := GenerateFromHTML(ctx, tt.args.html)
+			result, err := GenerateFromHTML(pdfRender.Context, tt.args.html)
 			fBytes, _ := io.ReadAll(result)
 			assert.Nil(t, err)
 			assert.NotNil(t, result)
