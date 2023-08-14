@@ -20,7 +20,7 @@ func TestHealthCheck(t *testing.T) {
 }
 
 func setupServer(req *http.Request) (echo.Context, *httptest.ResponseRecorder) {
-	conf, _ := config.InitAppConfig()
+	conf := config.InitAppConfig()
 	e := New(conf)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

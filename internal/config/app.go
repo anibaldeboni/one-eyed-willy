@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/go-playground/validator/v10"
@@ -29,11 +28,7 @@ func (cv *AppValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
 
-func InitAppConfig() (*AppConfig, error) {
-	if err := envs.Load(); err != nil {
-		return nil, fmt.Errorf("error initializing app: %v", err)
-	}
-
+func InitAppConfig() *AppConfig {
 	appPort := envs.Get("PORT")
 	if appPort == "" {
 		appPort = "8080"
@@ -47,5 +42,5 @@ func InitAppConfig() (*AppConfig, error) {
 		CORSConfig:  middleware.DefaultCORSConfig,
 
 		LogLevel: envs.Get("LOG_LEVEL"),
-	}, nil
+	}
 }

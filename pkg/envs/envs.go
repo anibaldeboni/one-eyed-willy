@@ -23,18 +23,18 @@ func Current() string {
 	return currentEnv
 }
 
-func Load() error {
+func Load() {
 	envFile := fmt.Sprintf(".env.%s", Current())
 
 	_, err := os.Stat(envFile)
-
-	if err == nil {
-		err = godotenv.Load(os.ExpandEnv(envFile))
-		if err != nil {
-			return fmt.Errorf("error initializing app: %v", err)
-		}
+	if err != nil {
+		panic(fmt.Errorf("could not find env file: %s", envFile))
 	}
-	return nil
+
+	err = godotenv.Load(os.ExpandEnv(envFile))
+	if err != nil {
+		panic(fmt.Errorf("could not load env file: %s", envFile))
+	}
 }
 
 func Get(key string) string {

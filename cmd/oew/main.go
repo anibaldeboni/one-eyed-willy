@@ -12,6 +12,7 @@ import (
 	"github.com/one-eyed-willy/internal/config"
 	"github.com/one-eyed-willy/internal/handler"
 	"github.com/one-eyed-willy/internal/web"
+	"github.com/one-eyed-willy/pkg/envs"
 	"github.com/one-eyed-willy/pkg/logger"
 )
 
@@ -31,7 +32,8 @@ import (
 // @produces	application/json application/octet-stream
 // @consumes	application/json
 func main() {
-	conf, _ := config.InitAppConfig()
+	envs.Load()
+	conf := config.InitAppConfig()
 	w := web.New(conf)
 	h := handler.New()
 	defer h.PdfRender.Cancel()
