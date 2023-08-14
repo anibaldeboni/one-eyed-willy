@@ -1,4 +1,4 @@
-basePath: /pdf
+basePath: /
 definitions:
   handler.createPdfFromHTMLRequest:
     properties:
@@ -22,10 +22,10 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: One-Eyed-Willy REST pdf generation API
+  title: One-Eyed-Willy pdf generation API
   version: "1.0"
 paths:
-  /pdf:
+  /generate:
     post:
       consumes:
       - applcation/json
@@ -53,7 +53,7 @@ paths:
       summary: Create a pdf
       tags:
       - pdf
-  /pdf/merge:
+  /merge:
     post:
       consumes:
       - multipart/form-data

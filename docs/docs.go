@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/pdf": {
+        "/generate": {
             "post": {
                 "description": "Generate a new pdf file from a html string",
                 "consumes": [
@@ -67,7 +67,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/pdf/merge": {
+        "/merge": {
             "post": {
                 "description": "Merges two or more pdfs",
                 "consumes": [
@@ -137,9 +137,9 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/pdf",
+	BasePath:         "/",
 	Schemes:          []string{"http", "https"},
-	Title:            "One-Eyed-Willy REST pdf generation API",
+	Title:            "One-Eyed-Willy pdf generation API",
 	Description:      "This documentation for One-Eyed-Willy pdf generator.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

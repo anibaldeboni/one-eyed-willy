@@ -6,7 +6,7 @@
     "swagger": "2.0",
     "info": {
         "description": "This documentation for One-Eyed-Willy pdf generator.",
-        "title": "One-Eyed-Willy REST pdf generation API",
+        "title": "One-Eyed-Willy pdf generation API",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "Aníbal Deboni Neto",
@@ -18,9 +18,9 @@
         },
         "version": "1.0"
     },
-    "basePath": "/pdf",
+    "basePath": "/",
     "paths": {
-        "/pdf": {
+        "/generate": {
             "post": {
                 "description": "Generate a new pdf file from a html string",
                 "consumes": [
@@ -63,7 +63,7 @@
                 }
             }
         },
-        "/pdf/merge": {
+        "/merge": {
             "post": {
                 "description": "Merges two or more pdfs",
                 "consumes": [

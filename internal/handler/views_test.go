@@ -20,11 +20,11 @@ func TestViews(t *testing.T) {
 			Handler: h.HomeView,
 		},
 		{
-			Path:    "/pdf",
+			Path:    "/generate",
 			Handler: h.CreatePdfFromHtmlView,
 		},
 		{
-			Path:    "/pdf/merge",
+			Path:    "/merge",
 			Handler: h.MergePdfsView,
 		},
 	}

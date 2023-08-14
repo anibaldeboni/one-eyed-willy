@@ -16,7 +16,7 @@ import (
 	"github.com/one-eyed-willy/pkg/logger"
 )
 
-//	@title			One-Eyed-Willy REST pdf generation API
+//	@title			One-Eyed-Willy pdf generation API
 //	@version		1.0
 //	@description	This documentation for One-Eyed-Willy pdf generator.
 //	@termsOfService	http://swagger.io/terms/
@@ -27,7 +27,7 @@ import (
 //	@license.name	Apache 2.0
 //	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @BasePath	/pdf
+// @BasePath	/
 // @schemes	http https
 // @produces	application/json application/octet-stream
 // @consumes	application/json
@@ -35,13 +35,12 @@ func main() {
 	envs.Load()
 	conf := config.InitAppConfig()
 	w := web.New(conf)
-	h := handler.New()
+	h := handler.New(w)
 	defer h.PdfRender.Cancel()
-
-	h.Register(w, conf)
 
 	go func() {
 		if err := w.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
+			h.PdfRender.Cancel()
 			logger.Log().Fatalf("shutting down the server: %v", err)
 		}
 	}()
