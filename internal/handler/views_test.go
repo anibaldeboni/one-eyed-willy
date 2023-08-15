@@ -12,20 +12,16 @@ import (
 
 func TestViews(t *testing.T) {
 	tests := []struct {
-		Path    string
-		Handler func(c echo.Context) error
+		Path string
 	}{
 		{
-			Path:    "/",
-			Handler: h.HomeView,
+			Path: "/",
 		},
 		{
-			Path:    "/generate",
-			Handler: h.CreatePdfFromHtmlView,
+			Path: "/generate",
 		},
 		{
-			Path:    "/merge",
-			Handler: h.MergePdfsView,
+			Path: "/merge",
 		},
 	}
 
@@ -34,10 +30,9 @@ func TestViews(t *testing.T) {
 			setup()
 			req := httptest.NewRequest(echo.GET, tt.Path, nil)
 			rec := httptest.NewRecorder()
-			ctx := e.NewContext(req, rec)
-			if assert.NotPanics(t, func() { _ = tt.Handler(ctx) }) {
-				assert.Equal(t, http.StatusOK, rec.Code)
-			}
+			e.ServeHTTP(rec, req)
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Equal(t, echo.MIMETextHTMLCharsetUTF8, rec.Header().Clone().Get("Content-Type"))
 		})
 	}
 }
