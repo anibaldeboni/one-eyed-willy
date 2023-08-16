@@ -4,6 +4,11 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        description: "Codecov token"
+        required: true
 jobs:
   unit-tests:
     strategy:
@@ -20,9 +25,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run unit tests
-        run: go test -v ./...
-
       - name: Run linter
         uses: golangci/golangci-lint-action@v3
         with:
@@ -30,3 +32,13 @@ jobs:
           # When `install-mode` is `binary` (default) the value can be v1.2 or v1.2.3 or `latest` to use the latest version.
           # When `install-mode` is `goinstall` the value can be v1.2.3, `latest`, or the hash of a commit.
           version: v1.53
+
+      - name: Run Tests
+        run: go test -race --coverprofile=coverage.coverprofile --covermode=atomic ./...
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
