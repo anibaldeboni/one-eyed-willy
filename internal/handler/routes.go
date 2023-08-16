@@ -27,9 +27,11 @@ func (h *Handler) setupRoutes(e *echo.Echo) {
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 	e.GET("/generate", h.CreatePdfFromHtmlView)
 	e.GET("/merge", h.MergePdfsView)
+	e.GET("/encrypt", h.EncryptPdfView)
 
 	api := e.Group("/pdf")
 	api.Use(middleware.BodyLimit(maxFileSize))
 	api.POST("/generate", h.GeneratePdfFromHTML)
 	api.POST("/merge", h.MergePdfs)
+	api.POST("/encrypt", h.EncryptPdf)
 }

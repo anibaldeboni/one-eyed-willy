@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Encrypt PDF</title>
+    {{template "meta.html" .}}
+    <script type="text/javascript" src="/static/encrypt.js"></script>
+  </head>
+  <body>
+    {{template "navbar.html" .}}
+    <div class="container container-large">
+      <input
+        id="pdfInput"
+        class="input-box"
+        type="file"
+        accept=".pdf"
+        name="file"
+      />
+      <div class="inline-container half-sized">
+        <label for="pdfPassword">Password</label>
+        <input
+          id="pdfPassword"
+          class="input-box"
+          type="password"
+          name="password"
+        />
+      </div>
+      <div class="inline-container half-sized">
+        <label for="showPassword">Confirm password</label>
+        <input
+          id="pdfPasswordConfirm"
+          class="input-box"
+          type="password"
+          name="passwdConfirm"
+        />
+      </div>
+      <div class="inline-container half-sized">
+        <label>Show password</label>
+        <input id="showPassword" type="checkbox" />
+      </div>
+      <div class="inline-container">
+        <div class="error-message" id="error-container">
+          <span class="error-icon material-icons"> error </span>
+          <span id="error">error-message</span>
+        </div>
+        <div class="spinner-container" id="spinner-container">
+          <div class="spinner" id="spinner">
+            <div class="head"></div>
+          </div>
+        </div>
+        <button class="button" id="encryptButton">
+          <span class="button-icon material-icons">lock</span>
+          <span class="button-text">Encrypt PDF</span>
+        </button>
+      </div>
+    </div>
+    <div class="container container-large" id="pdfContainer">
+      <iframe id="pdfViewer" class="pdf-iframe"></iframe>
+      <a id="file-link" target="_blank" rel="noopener noreferrer">
+        <span class="icon material-icons"> zoom_out_map </span>
+      </a>
+    </div>
+  </body>
+</html>

@@ -41,7 +41,7 @@ button {
   margin-bottom: 2em;
 }
 .container-small {
-  max-width: 25em;
+  max-width: 35em;
 }
 .container-large {
   width: 90%;
@@ -80,6 +80,9 @@ button {
   align-items: center;
   margin-top: 1em;
 }
+.half-sized {
+  width: 48%;
+}
 .button {
   display: flex;
   align-items: center;
@@ -98,6 +101,7 @@ button {
 }
 .button:nth-child(even) {
   margin-left: 1em;
+  margin-right: 1em;
 }
 .button-icon {
   margin-right: 0.5em;
@@ -111,7 +115,7 @@ button {
   display: flex;
   align-items: center;
   background-color: #1976d2;
-  border-bottom: 5px solid #2196f3;
+  border-bottom: 3px solid #2196f3;
   width: 100%;
   position: fixed;
   top: 0;

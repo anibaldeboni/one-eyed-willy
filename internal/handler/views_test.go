@@ -23,6 +23,9 @@ func TestViews(t *testing.T) {
 		{
 			Path: "/merge",
 		},
+		{
+			Path: "/encrypt",
+		},
 	}
 
 	for _, tt := range tests {
@@ -33,7 +36,8 @@ func TestViews(t *testing.T) {
 			e.ServeHTTP(rec, req)
 
 			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, echo.MIMETextHTMLCharsetUTF8, rec.Header().Clone().Get("Content-Type"))
+			assert.Equal(t, echo.MIMETextHTMLCharsetUTF8, rec.Header().Get(echo.HeaderContentType))
+			assert.NotEmpty(t, rec.Body)
 		})
 	}
 }

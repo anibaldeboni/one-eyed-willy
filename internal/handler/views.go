@@ -70,3 +70,8 @@ func (h *Handler) CreatePdfFromHtmlView(c echo.Context) error {
 func (h *Handler) MergePdfsView(c echo.Context) error {
 	return c.Render(http.StatusOK, "merge.html", nil)
 }
+
+// EncryptPdfView godoc
+func (h *Handler) EncryptPdfView(c echo.Context) error {
+	return c.Render(http.StatusOK, "encrypt.html", nil)
+}
