@@ -12,18 +12,14 @@ import (
 
 func TestHealthCheck(t *testing.T) {
 	t.Run("health check", func(t *testing.T) {
-		_, rec := setupServer(
-			httptest.NewRequest(echo.GET, "/health", nil),
-		)
+		conf := config.InitAppConfig()
+		e := New(conf)
+		req := httptest.NewRequest(echo.GET, "/health", nil)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
 		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.Equal(t, echo.MIMEApplicationJSONCharsetUTF8, rec.Header().Get(echo.HeaderContentType))
+		assert.Equal(t, "{\"status\":\"OK\"}\n", rec.Body.String())
 	})
-}
-
-func setupServer(req *http.Request) (echo.Context, *httptest.ResponseRecorder) {
-	conf := config.InitAppConfig()
-	e := New(conf)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-
-	return c, rec
 }
