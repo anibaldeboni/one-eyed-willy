@@ -12,10 +12,15 @@ import (
 //go:embed static/*
 var static embed.FS
 
+//go:embed assets/*
+var assets embed.FS
+
 func (h *Handler) addRoutes(e *echo.Echo) {
 	staticHandler := echo.WrapHandler(http.FileServer(http.FS(static)))
 	// The embedded files will all be in the '/static' folder so need to rewrite the request (could also do this with fs.Sub)
 	staticRewrite := middleware.Rewrite(map[string]string{"/*": "/static/$1"})
+
+	e.StaticFS("/assets/*", echo.MustSubFS(assets, "assets"))
 
 	e.Renderer = h.NewTemplateRegistry()
 
