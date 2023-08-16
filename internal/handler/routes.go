@@ -2,10 +2,8 @@ package handler
 
 import (
 	"embed"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -16,15 +14,11 @@ var static embed.FS
 var assets embed.FS
 
 func (h *Handler) addRoutes(e *echo.Echo) {
-	staticHandler := echo.WrapHandler(http.FileServer(http.FS(static)))
-	// The embedded files will all be in the '/static' folder so need to rewrite the request (could also do this with fs.Sub)
-	staticRewrite := middleware.Rewrite(map[string]string{"/*": "/static/$1"})
-
+	e.StaticFS("/static/*", echo.MustSubFS(static, "static"))
 	e.StaticFS("/assets/*", echo.MustSubFS(assets, "assets"))
 
 	e.Renderer = h.NewTemplateRegistry()
 
-	e.GET("/*", staticHandler, staticRewrite)
 	e.GET("/", h.HomeView)
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 	e.GET("/generate", h.CreatePdfFromHtmlView)
