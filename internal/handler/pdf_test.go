@@ -27,7 +27,7 @@ func TestGeneratePdfCaseSuccess(t *testing.T) {
 
 	if assert.NotPanics(t, func() { _ = h.GeneratePdfFromHTML(ctx) }) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, MIMEApplicationPdf, rec.Header().Clone().Get("Content-Type"))
+		assert.Equal(t, MIMEApplicationPdf, rec.Header().Get(echo.HeaderContentType))
 		assert.NoError(t, pdf.ValidatePdf(rec.Body.Bytes()))
 		assert.NotEmpty(t, rec.Body)
 	}
@@ -69,6 +69,62 @@ func TestMergePdfs(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEncryptPdf(t *testing.T) {
+	tests := []struct {
+		name          string
+		numberOfFiles int
+		password      string
+		httpStatus    int
+		contentType   string
+	}{
+		{
+			name:          "when just one file is provided",
+			numberOfFiles: 1,
+			password:      "test",
+			httpStatus:    http.StatusOK,
+			contentType:   MIMEApplicationPdf,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			body, boundary := createEncryptBody(t, tt.numberOfFiles, tt.password)
+
+			ctx, rec := setupServer(
+				httptest.NewRequest(echo.POST, "/pdf/encrypt", body),
+				fmt.Sprintf("%s; boundary=%s", echo.MIMEMultipartForm, boundary),
+				len(body.Bytes()),
+			)
+
+			if assert.NotPanics(t, func() { _ = h.EncryptPdf(ctx) }) {
+				assert.Equal(t, tt.httpStatus, rec.Code)
+				got := rec.Header().Get(echo.HeaderContentType)
+				assert.Equal(t, tt.contentType, got)
+			}
+		})
+	}
+}
+func createEncryptBody(t *testing.T, numberOfFiles int, password string) (*bytes.Buffer, string) {
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	defer writer.Close()
+
+	file, err := os.ReadFile("../../testdata/file1.pdf")
+	if err != nil {
+		t.Fatal("testdata/file1.pdf not found")
+	}
+
+	for i := 0; i < numberOfFiles; i++ {
+		part, _ := writer.CreateFormFile("file", fmt.Sprintf("file%d.pdf", i))
+		if _, err := part.Write(file); err != nil {
+			t.Fatal("could not write form-data")
+		}
+	}
+
+	writer.WriteField("password", password)
+
+	return body, writer.Boundary()
 }
 
 func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {

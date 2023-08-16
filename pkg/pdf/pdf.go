@@ -11,9 +11,9 @@ import (
 	"github.com/chromedp/chromedp"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/one-eyed-willy/pkg/logger"
-	"github.com/one-eyed-willy/pkg/utils"
 	pdfcpuAPI "github.com/pdfcpu/pdfcpu/pkg/api"
 	pdfcpuLog "github.com/pdfcpu/pdfcpu/pkg/log"
+	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
 	pdfcpuConfig "github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
 )
 
@@ -99,53 +99,19 @@ func Merge(files [][]byte) (file io.Reader, err error) {
 	return io.Reader(&buf), nil
 }
 
-func ValidatePdf(data []byte) error {
-	isInitialPdfBytes := utils.IsSubSlice(data[:5], []byte{0x25, 0x50, 0x44, 0x46, 0x2D})
+func Encrypt(file []byte, password string) (io.Reader, error) {
+	pdfcpuConfig.ConfigPath = "disable"
+	pdfcpuLog.DisableLoggers()
 
-	if !isInitialPdfBytes {
-		return errors.New("This is not a pdf file")
+	if err := ValidatePdf(file); err != nil {
+		return nil, err
+	}
+	conf := model.NewAESConfiguration(password, password, 256)
+
+	buf := bytes.Buffer{}
+	if err := pdfcpuAPI.Encrypt(bytes.NewReader(file), &buf, conf); err != nil {
+		return nil, errors.New("Could not encrypt pdf")
 	}
 
-	if isVersion1dot3(data) {
-		eof1dot3 := []byte{
-			0x25, // %
-			0x25, // %
-			0x45, // E
-			0x4F, // O
-			0x46, // F
-			0x20, // SPACE
-			0x0A, // EOL
-		}
-
-		if utils.IsSubSlice(data[len(data)-7:], eof1dot3) {
-			return nil
-		}
-		return errors.New("Invalid file terminator pdf v1.3")
-	}
-
-	if isVersion1dot4(data) {
-		eof1dot4 := []byte{
-			0x25, // %
-			0x25, // %
-			0x45, // E
-			0x4F, // O
-			0x46, // F
-			0x0A, // EOL
-		}
-
-		if utils.IsSubSlice(data[len(data)-6:], eof1dot4) {
-			return nil
-		}
-		return errors.New("Invalid file terminator for pdf v1.4")
-	}
-
-	return nil
-}
-
-func isVersion1dot3(data []byte) bool {
-	return utils.IsSubSlice(data[5:8], []byte{0x31, 0x2E, 0x33})
-}
-
-func isVersion1dot4(data []byte) bool {
-	return utils.IsSubSlice(data[5:8], []byte{0x31, 0x2E, 0x34})
+	return io.Reader(&buf), nil
 }

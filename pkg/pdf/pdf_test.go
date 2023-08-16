@@ -74,6 +74,31 @@ func TestMerge(t *testing.T) {
 	}
 }
 
+func TestEncrypt(t *testing.T) {
+	type args struct {
+		files    [][]byte
+		password string
+	}
+	tests := []struct {
+		name string
+		args args
+		err  error
+	}{
+		{
+			name: "When the file is encrypted",
+			args: args{files: loadFiles(false, t), password: "test"},
+			err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := Encrypt(tt.args.files[0], tt.args.password)
+			assert.IsType(t, tt.err, err)
+			assert.NotEmpty(t, result)
+		})
+	}
+}
+
 func loadFiles(includeInvalid bool, t *testing.T) [][]byte {
 	file1, err := os.ReadFile("../../testdata/file1.pdf")
 	if err != nil {

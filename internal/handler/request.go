@@ -28,3 +28,15 @@ func (r *mergePdfsRequest) bind(c echo.Context) error {
 	}
 	return c.Validate(r)
 }
+
+type encryptPdfRequest struct {
+	File     *multipart.FileHeader `form:"file" validate:"required,lt=2"`
+	Password string                `form:"password" validate:"required,gt=0"`
+}
+
+func (r *encryptPdfRequest) bind(c echo.Context) error {
+	if err := c.Bind(r); err != nil {
+		return err
+	}
+	return c.Validate(r)
+}
