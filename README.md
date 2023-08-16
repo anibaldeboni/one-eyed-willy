@@ -1,5 +1,7 @@
 # one-eyed-willy
 
+[![codecov](https://codecov.io/gh/anibaldeboni/one-eyed-willy/graph/badge.svg?token=TGS4JFQ5WV)](https://codecov.io/gh/anibaldeboni/one-eyed-willy)
+
 A web service written in Go to generate pdfs from html and merge multiple files
 
 # What?
