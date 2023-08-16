@@ -10,31 +10,31 @@ default: all
 all: lint test
 
 lint: install_linter
-	golangci-lint run -v
+	@golangci-lint run -v
 
 test: install_deps
-	go test -v ./...
+	@go test -v -race ./...
 
 docs: install_swag
 	swag i --parseInternal --dir ./cmd/oew/,./internal/handler/,./pkg/utils
 
 install_deps:
-	go get -v ./...
+	@go get -v ./...
 
 run:
-	go run ./cmd/oew/
+	@go run ./cmd/oew/
 
 build:
-	go build -v -o ./bin/$(APP) ./cmd/oew
+	@go build -v -o ./bin/$(APP) ./cmd/oew
 
 build-static:
 	CGO_ENABLED=0 go build -race -v -o $(APP) -a -installsuffix cgo -ldflags $(LDFLAGS) .
 
 clean:
-	rm -rf $(BIN)
+	@rm -rf $(BIN)
 
 watch: install_air
-	air
+	@air
 
 install_linter:
 	@if [ "$(shell which golangci-lint)" = "" ]; then\
