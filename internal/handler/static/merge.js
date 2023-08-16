@@ -22,13 +22,26 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   clear();
 
+  const handleError = (errorCode) => {
+    switch (errorCode) {
+      case 1:
+        showError("Please select at least two PDF files.");
+        break;
+      case 413:
+        showError("The selected files are too large.");
+        break;
+      default:
+        showError("PDF merging failed. Unexpected error.");
+    }
+    showSpinner(false);
+  };
+
   mergeButton.addEventListener("click", async () => {
     clear();
     showSpinner(true);
     const selectedFiles = pdfInput.files;
     if (selectedFiles.length < 2) {
-      showError("Please select at least two PDF files.");
-      showSpinner(false);
+      handleError(1);
       return;
     }
 
@@ -38,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("/merge", {
+      const response = await fetch("/pdf/merge", {
         method: "POST",
         body: formData,
       });
@@ -50,10 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
         fileLink.href = blobUrl;
         pdfContainer.style.display = "flex";
       } else {
-        showError("PDF merging failed.");
+        handleError(response.status);
       }
     } catch (error) {
-      showError("PDF merging failed. Unexpected error.");
+      handleError(response.status);
       console.error(`An error occurred: ${error}`);
     }
     showSpinner(false);

@@ -31,6 +31,7 @@ func TestViews(t *testing.T) {
 			req := httptest.NewRequest(echo.GET, tt.Path, nil)
 			rec := httptest.NewRecorder()
 			e.ServeHTTP(rec, req)
+
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Equal(t, echo.MIMETextHTMLCharsetUTF8, rec.Header().Clone().Get("Content-Type"))
 		})

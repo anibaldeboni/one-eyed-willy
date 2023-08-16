@@ -17,7 +17,8 @@ type AppConfig struct {
 	Validator  echo.Validator        `json:"-"`
 	CORSConfig middleware.CORSConfig `json:"-"`
 
-	LogLevel string `json:"log_level"`
+	LogLevel    string `json:"log_level"`
+	MaxFileSize string `json:"max_file_size"`
 }
 
 type AppValidator struct {
@@ -41,6 +42,7 @@ func InitAppConfig() *AppConfig {
 		Validator:   &AppValidator{validator: validator.New()},
 		CORSConfig:  middleware.DefaultCORSConfig,
 
-		LogLevel: envs.Get("LOG_LEVEL"),
+		LogLevel:    envs.Get("LOG_LEVEL"),
+		MaxFileSize: "5M",
 	}
 }

@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/generate": {
+        "/pdf/generate": {
             "post": {
                 "description": "Generate a new pdf file from a html string",
                 "consumes": [
@@ -67,7 +67,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/merge": {
+        "/pdf/merge": {
             "post": {
                 "description": "Merges two or more pdfs",
                 "consumes": [

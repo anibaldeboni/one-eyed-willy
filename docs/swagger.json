@@ -20,7 +20,7 @@
     },
     "basePath": "/",
     "paths": {
-        "/generate": {
+        "/pdf/generate": {
             "post": {
                 "description": "Generate a new pdf file from a html string",
                 "consumes": [
@@ -63,7 +63,7 @@
                 }
             }
         },
-        "/merge": {
+        "/pdf/merge": {
             "post": {
                 "description": "Merges two or more pdfs",
                 "consumes": [

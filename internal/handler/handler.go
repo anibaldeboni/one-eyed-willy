@@ -17,6 +17,6 @@ func New(e *echo.Echo) *Handler {
 	h := &Handler{
 		PdfRender: pdf.NewRender(),
 	}
-	h.addRoutes(e)
+	h.setupRoutes(e)
 	return h
 }

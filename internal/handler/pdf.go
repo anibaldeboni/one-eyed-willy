@@ -24,7 +24,7 @@ import (
 //	@success		200
 //	@failure		400	{object}	utils.Error
 //	@failure		500	{object}	utils.Error
-//	@Router			/generate [post]
+//	@Router			/pdf/generate [post]
 func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 	req := new(createPdfFromHTMLRequest)
 
@@ -84,7 +84,7 @@ func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
 //	@Success		200
 //	@Failure		400	{object}	utils.Error
 //	@Failure		500	{object}	utils.Error
-//	@Router			/merge [post]
+//	@Router			/pdf/merge [post]
 func (h *Handler) MergePdfs(c echo.Context) (err error) {
 	req := new(mergePdfsRequest)
 

@@ -20,16 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   clear();
 
+  const handleError = (errorCode) => {
+    switch (errorCode) {
+      case 1:
+        showError("Your HTML is empty.");
+        break;
+      case 413:
+        showError("The HTML provided is too large.");
+        break;
+      default:
+        showError("PDF generation failed. Unexpected error.");
+    }
+    showSpinner(false);
+  };
+
   document.getElementById("generatePDF").addEventListener("click", async () => {
     clear();
     if (!htmlContent.value) {
-      showError("Your HTML is empty.");
+      handleError(1);
       return;
     }
     showSpinner(true);
 
     try {
-      const response = await fetch("/generate", {
+      const response = await fetch("/pdf/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,10 +58,10 @@ document.addEventListener("DOMContentLoaded", () => {
         fileLink.href = blobUrl;
         pdfContainer.style.display = "flex"; // Show the PDF container
       } else {
-        showError("PDF generation failed. Please try again.");
+        handleError(response.status);
       }
     } catch (error) {
-      showError("PDF generation failed. Unexpected error");
+      showError(response.status);
       console.error(`An error occurred: ${error}`);
     }
     showSpinner(false);

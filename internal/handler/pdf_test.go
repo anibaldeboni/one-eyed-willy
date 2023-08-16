@@ -22,6 +22,7 @@ func TestGeneratePdfCaseSuccess(t *testing.T) {
 	ctx, rec := setupServer(
 		httptest.NewRequest(echo.POST, "/pdf", strings.NewReader(reqJSON)),
 		echo.MIMEApplicationJSON,
+		len(reqJSON),
 	)
 
 	if assert.NotPanics(t, func() { _ = h.GeneratePdfFromHTML(ctx) }) {
@@ -59,6 +60,7 @@ func TestMergePdfs(t *testing.T) {
 			ctx, rec := setupServer(
 				httptest.NewRequest(echo.POST, "/pdf/merge", body),
 				fmt.Sprintf("%s; boundary=%s", echo.MIMEMultipartForm, boundary),
+				len(body.Bytes()),
 			)
 
 			if assert.NotPanics(t, func() { _ = h.MergePdfs(ctx) }) {
@@ -92,9 +94,11 @@ func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {
 func setupServer(
 	req *http.Request,
 	contentType string,
+	contentLength int,
 ) (echo.Context, *httptest.ResponseRecorder) {
 	setup()
 	req.Header.Set(echo.HeaderContentType, contentType)
+	req.Header.Set(echo.HeaderContentLength, fmt.Sprintf("%d", contentLength))
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
