@@ -6,7 +6,6 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
-	"sync"
 
 	"github.com/labstack/echo/v4"
 	"github.com/one-eyed-willy/pkg/pdf"
@@ -47,7 +46,6 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 }
 
 func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
-	var wg sync.WaitGroup
 	var fileBytes [][]byte
 
 	for _, file := range files {
@@ -57,18 +55,13 @@ func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
 		}
 		defer src.Close()
 
-		wg.Add(1)
-		go func(src multipart.File) {
-			defer wg.Done()
-			buf := new(bytes.Buffer)
-			if _, e := io.Copy(buf, src); err != nil {
-				err = e
-			}
-			fileBytes = append(fileBytes, buf.Bytes())
-		}(src)
+		buf := new(bytes.Buffer)
+		if _, err := io.Copy(buf, src); err != nil {
+			return nil, err
+		}
+		fileBytes = append(fileBytes, buf.Bytes())
 
 	}
-	wg.Wait()
 
 	return fileBytes, err
 }
