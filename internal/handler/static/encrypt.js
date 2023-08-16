@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showError("Passwords do not match.");
         break;
       case 1:
-        showError("Please select at least one PDF file.");
+        showError("Please select a PDF file.");
         break;
       case 413:
         showError("The selected files are too large.");
