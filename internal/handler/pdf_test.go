@@ -122,7 +122,10 @@ func createEncryptBody(t *testing.T, numberOfFiles int, password string) (*bytes
 		}
 	}
 
-	writer.WriteField("password", password)
+	err = writer.WriteField("password", password)
+	if err != nil {
+		t.Fatal("could not write form-data")
+	}
 
 	return body, writer.Boundary()
 }
