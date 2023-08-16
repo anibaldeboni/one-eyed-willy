@@ -7,7 +7,7 @@
   </head>
   <body>
     {{template "navbar.html" .}}
-    <div class="container container-large">
+    <div class="container container-small">
       <input
         id="pdfInput"
         class="input-box"
@@ -15,7 +15,7 @@
         accept=".pdf"
         name="file"
       />
-      <div class="inline-container half-sized">
+      <div class="inline-container">
         <label for="pdfPassword">Password</label>
         <input
           id="pdfPassword"
@@ -24,7 +24,7 @@
           name="password"
         />
       </div>
-      <div class="inline-container half-sized">
+      <div class="inline-container">
         <label for="showPassword">Confirm password</label>
         <input
           id="pdfPasswordConfirm"
@@ -33,7 +33,7 @@
           name="passwdConfirm"
         />
       </div>
-      <div class="inline-container half-sized">
+      <div class="inline-container">
         <label>Show password</label>
         <input id="showPassword" type="checkbox" />
       </div>

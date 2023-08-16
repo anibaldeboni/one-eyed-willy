@@ -25,7 +25,7 @@ button {
 }
 .horizontal-align {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   white-space: nowrap;
 }
@@ -41,7 +41,8 @@ button {
   margin-bottom: 2em;
 }
 .container-small {
-  max-width: 35em;
+  max-width: 30em;
+  width: 45%;
 }
 .container-large {
   width: 90%;
@@ -79,9 +80,6 @@ button {
   justify-content: space-between;
   align-items: center;
   margin-top: 1em;
-}
-.half-sized {
-  width: 48%;
 }
 .button {
   display: flex;
