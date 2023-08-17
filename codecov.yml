@@ -1,4 +1,5 @@
 ignore:
   - "internal/web/file_binder.go"
   - "internal/handler/request.go"
+  - "testdata"
   - "*_test.go"
