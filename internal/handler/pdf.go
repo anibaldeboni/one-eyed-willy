@@ -1,10 +1,7 @@
 package handler
 
 import (
-	"bytes"
 	"encoding/base64"
-	"io"
-	"mime/multipart"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -45,27 +42,6 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 	return c.Stream(http.StatusOK, MIMEApplicationPdf, pdf)
 }
 
-func readBytes(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
-	var fileBytes [][]byte
-
-	for _, file := range files {
-		src, err := file.Open()
-		if err != nil {
-			return nil, err
-		}
-		defer src.Close()
-
-		buf := new(bytes.Buffer)
-		if _, err := io.Copy(buf, src); err != nil {
-			return nil, err
-		}
-		fileBytes = append(fileBytes, buf.Bytes())
-
-	}
-
-	return fileBytes, err
-}
-
 // MergePdfFiles godoc
 //
 //	@Summary		Merge pdfs
@@ -85,7 +61,7 @@ func (h *Handler) MergePdfs(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, utils.NewError(err))
 	}
 
-	files, err := readBytes(req.Files)
+	files, err := readFiles(req.Files)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
@@ -118,12 +94,12 @@ func (h *Handler) EncryptPdf(c echo.Context) error {
 	if err := req.bind(c); err != nil {
 		return c.JSON(http.StatusBadRequest, utils.NewError(err))
 	}
-	file, err := readBytes([]*multipart.FileHeader{req.File})
+	file, err := readFile(req.File)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.Encrypt(file[0], req.Password)
+	pdf, err := pdf.Encrypt(file, req.Password)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
