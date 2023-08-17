@@ -33,6 +33,20 @@ func TestGeneratePdfCaseSuccess(t *testing.T) {
 	}
 }
 
+func BenchmarkGeneratePdf(b *testing.B) {
+	var (
+		reqJSON = `{"html":"PGh0bWw+CjxoZWFkPgoJPHRpdGxlPk15IFBERiBGaWxlPC90aXRsZT4KPC9oZWFkPgo8Ym9keT4KCTxwPkhlbGxvIHRoZXJlISBJJ20gYSBwZGYgZmlsZSBnZW5lcmF0ZSBmcm9tIGEgaHRtbCB1c2luZyBnbyBhbmQgZ29wZGYgcGFja2FnZTwvcD4KPC9ib2R5Pgo8L2h0bWw+"}`
+	)
+	ctx, _ := setupServer(
+		httptest.NewRequest(echo.POST, "/pdf/generate", strings.NewReader(reqJSON)),
+		echo.MIMEApplicationJSON,
+		len(reqJSON),
+	)
+	for i := 0; i < b.N; i++ {
+		_ = h.GeneratePdfFromHTML(ctx)
+	}
+}
+
 func TestMergePdfs(t *testing.T) {
 	tests := []struct {
 		name          string
@@ -68,6 +82,18 @@ func TestMergePdfs(t *testing.T) {
 				assert.Equal(t, tt.contentType, rec.Header().Clone().Get("Content-Type"))
 			}
 		})
+	}
+}
+
+func BenchmarkMergePdfs(b *testing.B) {
+	body, boundary := createBody(nil, 2)
+	ctx, _ := setupServer(
+		httptest.NewRequest(echo.POST, "/pdf/merge", body),
+		fmt.Sprintf("%s; boundary=%s", echo.MIMEMultipartForm, boundary),
+		len(body.Bytes()),
+	)
+	for i := 0; i < b.N; i++ {
+		_ = h.MergePdfs(ctx)
 	}
 }
 
@@ -112,6 +138,19 @@ func TestEncryptPdf(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkEncryptPdf(b *testing.B) {
+	body, boundary := createEncryptBody(nil, false, "test")
+	ctx, _ := setupServer(
+		httptest.NewRequest(echo.POST, "/pdf/encrypt", body),
+		fmt.Sprintf("%s; boundary=%s", echo.MIMEMultipartForm, boundary),
+		len(body.Bytes()),
+	)
+	for i := 0; i < b.N; i++ {
+		_ = h.EncryptPdf(ctx)
+	}
+}
+
 func createEncryptBody(t *testing.T, useInvalidFile bool, password string) (*bytes.Buffer, string) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)

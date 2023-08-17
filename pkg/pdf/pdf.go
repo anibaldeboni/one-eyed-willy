@@ -37,6 +37,23 @@ func NewRender() *PdfRender {
 	)
 	ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
 
+	c, cancelCtx := chromedp.NewContext(ctx)
+
+	// ensure cleanup
+	var success bool
+	defer func() {
+		if !success {
+			_ = chromedp.Cancel(c)
+			cancelCtx()
+		}
+	}()
+
+	err := chromedp.Run(c)
+	if err != nil {
+		panic(err)
+	}
+	success = true
+
 	return &PdfRender{Context: ctx, Cancel: cancel}
 }
 

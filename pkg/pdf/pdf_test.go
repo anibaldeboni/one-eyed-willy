@@ -42,6 +42,13 @@ func TestGenerateFromHTML(t *testing.T) {
 	}
 }
 
+func BenchmarkGenerateFromHTML(b *testing.B) {
+	pdfRender := NewRender()
+	for i := 0; i < b.N; i++ {
+		_, _ = GenerateFromHTML(pdfRender.Context, "<h1>Hello World</h1>")
+	}
+}
+
 func TestMerge(t *testing.T) {
 	type args struct {
 		files [][]byte
@@ -77,6 +84,12 @@ func TestMerge(t *testing.T) {
 			assert.IsType(t, tt.err, err)
 			assert.Equal(t, tt.resultIsEmpty, result == nil)
 		})
+	}
+}
+
+func BenchmarkMerge(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = Merge(testdata.LoadFilesWithInvalid(false, nil))
 	}
 }
 
@@ -116,5 +129,11 @@ func TestEncrypt(t *testing.T) {
 			assert.IsType(t, tt.err, err)
 			assert.Equal(t, tt.result, got != nil)
 		})
+	}
+}
+
+func BenchmarkEncrypt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = Encrypt(testdata.LoadFilesWithInvalid(false, nil)[0], "test")
 	}
 }
