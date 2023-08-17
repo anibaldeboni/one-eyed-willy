@@ -20,6 +20,6 @@ jobs:
   basic-checks:
     uses: ./.github/workflows/basic-checks.yml
     secrets: inherit
-  code-analysis:
+  codeql:
     uses: ./.github/workflows/codeql.yml
     secrets: inherit

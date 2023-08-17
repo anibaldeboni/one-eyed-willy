@@ -21,13 +21,13 @@ jobs:
   basic-checks:
     uses: ./.github/workflows/basic-checks.yml
     secrets: inherit
-  code-analysis:
+  codeql:
     uses: ./.github/workflows/codeql.yml
     secrets: inherit
-  code-benchmarks:
+  benchmarks:
     uses: ./.github/workflows/code-benchmarks.yml
     secrets: inherit
-  code-quality:
+  coverage:
     uses: ./.github/workflows/code-quality.yml
     secrets: inherit
-    needs: [basic-checks, code-analysis]
+    needs: [basic-checks, codeql]
