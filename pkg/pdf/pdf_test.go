@@ -3,9 +3,9 @@ package pdf
 import (
 	"errors"
 	"io"
-	"os"
 	"testing"
 
+	"github.com/one-eyed-willy/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,19 +54,19 @@ func TestMerge(t *testing.T) {
 	}{
 		{
 			name:          "When all files could be read",
-			args:          args{files: loadFiles(false, t)},
+			args:          args{files: testdata.LoadFilesWithInvalid(false, t)},
 			resultIsEmpty: false,
 			err:           nil,
 		},
 		{
 			name:          "When some file is invalid",
-			args:          args{files: loadFiles(true, t)},
+			args:          args{files: testdata.LoadFilesWithInvalid(true, t)},
 			resultIsEmpty: true,
 			err:           errors.New("Could not merge pdfs. Some files can't be read"),
 		},
 		{
 			name:          "When the files can't be merged",
-			args:          args{files: [][]byte{unreadableFile(), unreadableFile()}},
+			args:          args{files: [][]byte{testdata.UnreadableFile(), testdata.UnreadableFile()}},
 			resultIsEmpty: true,
 			err:           errors.New("Could not merge pdfs. Some files can't be read"),
 		},
@@ -93,7 +93,7 @@ func TestEncrypt(t *testing.T) {
 	}{
 		{
 			name:   "When the file is valid",
-			args:   args{files: loadFiles(false, t)[0], password: "test"},
+			args:   args{files: testdata.LoadFilesWithInvalid(false, t)[0], password: "test"},
 			err:    nil,
 			result: true,
 		},
@@ -105,7 +105,7 @@ func TestEncrypt(t *testing.T) {
 		},
 		{
 			name:   "When the file is not encryptable",
-			args:   args{files: unreadableFile(), password: "test"},
+			args:   args{files: testdata.UnreadableFile(), password: "test"},
 			err:    errors.New("This file can't be encrypted"),
 			result: false,
 		},
@@ -117,28 +117,4 @@ func TestEncrypt(t *testing.T) {
 			assert.Equal(t, tt.result, got != nil)
 		})
 	}
-}
-
-func unreadableFile() []byte {
-	return []byte{0x25, 0x50, 0x44, 0x46, 0x2D, 0x31, 0x2E, 0x34, 0x25, 0x25, 0x45, 0x4F, 0x46, 0x0A}
-}
-
-func loadFile(t *testing.T) []byte {
-	file, err := os.ReadFile("../../testdata/file1.pdf")
-	if err != nil {
-		t.Fatal("testdata/file1.pdf not found")
-	}
-
-	return file
-}
-
-func loadFiles(includeInvalid bool, t *testing.T) [][]byte {
-	files := [][]byte{loadFile(t), loadFile(t)}
-
-	if includeInvalid == true {
-		// fileInvalid := []byte(`invalid-file`)
-		files = append(files, unreadableFile())
-	}
-
-	return files
 }

@@ -6,12 +6,12 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
 	"github.com/labstack/echo/v4"
 	"github.com/one-eyed-willy/pkg/pdf"
+	"github.com/one-eyed-willy/testdata"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -73,23 +73,30 @@ func TestMergePdfs(t *testing.T) {
 
 func TestEncryptPdf(t *testing.T) {
 	tests := []struct {
-		name          string
-		numberOfFiles int
-		password      string
-		httpStatus    int
-		contentType   string
+		name           string
+		useInvalidFile bool
+		password       string
+		httpStatus     int
+		contentType    string
 	}{
 		{
-			name:          "when just one file is provided",
-			numberOfFiles: 1,
-			password:      "test",
-			httpStatus:    http.StatusOK,
-			contentType:   MIMEApplicationPdf,
+			name:           "when just one file is provided",
+			useInvalidFile: false,
+			password:       "test",
+			httpStatus:     http.StatusOK,
+			contentType:    MIMEApplicationPdf,
+		},
+		{
+			name:           "when the file is invalid",
+			useInvalidFile: true,
+			password:       "test",
+			httpStatus:     http.StatusInternalServerError,
+			contentType:    echo.MIMEApplicationJSONCharsetUTF8,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			body, boundary := createEncryptBody(t, tt.numberOfFiles, tt.password)
+			body, boundary := createEncryptBody(t, tt.useInvalidFile, tt.password)
 
 			ctx, rec := setupServer(
 				httptest.NewRequest(echo.POST, "/pdf/encrypt", body),
@@ -105,24 +112,24 @@ func TestEncryptPdf(t *testing.T) {
 		})
 	}
 }
-func createEncryptBody(t *testing.T, numberOfFiles int, password string) (*bytes.Buffer, string) {
+func createEncryptBody(t *testing.T, useInvalidFile bool, password string) (*bytes.Buffer, string) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 	defer writer.Close()
 
-	file, err := os.ReadFile("../../testdata/file1.pdf")
-	if err != nil {
-		t.Fatal("testdata/file1.pdf not found")
+	var file []byte
+	if useInvalidFile {
+		file = testdata.UnreadableFile()
+	} else {
+		file = testdata.LoadFile(t)
 	}
 
-	for i := 0; i < numberOfFiles; i++ {
-		part, _ := writer.CreateFormFile("file", fmt.Sprintf("file%d.pdf", i))
-		if _, err := part.Write(file); err != nil {
-			t.Fatal("could not write form-data")
-		}
+	part, _ := writer.CreateFormFile("file", "file.pdf")
+	if _, err := part.Write(file); err != nil {
+		t.Fatal("could not write form-data")
 	}
 
-	err = writer.WriteField("password", password)
+	err := writer.WriteField("password", password)
 	if err != nil {
 		t.Fatal("could not write form-data")
 	}
@@ -135,10 +142,7 @@ func createBody(t *testing.T, numberOfFiles int) (*bytes.Buffer, string) {
 	writer := multipart.NewWriter(body)
 	defer writer.Close()
 
-	file, err := os.ReadFile("../../testdata/file1.pdf")
-	if err != nil {
-		t.Fatal("testdata/file1.pdf not found")
-	}
+	file := testdata.LoadFile(t)
 
 	for i := 0; i < numberOfFiles; i++ {
 		part, _ := writer.CreateFormFile("files", fmt.Sprintf("file%d.pdf", i))
