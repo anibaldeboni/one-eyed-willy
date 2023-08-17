@@ -1,0 +1,3 @@
+ignore:
+  - "internal/web/file_binder.go"
+  - "*_test.go"
