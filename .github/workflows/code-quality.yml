@@ -1,4 +1,4 @@
-name: Run code coverage analysis
+name: Run code quality analysis
 on:
   workflow_call:
     secrets:
@@ -6,16 +6,16 @@ on:
         description: "Codecov token"
         required: true
 jobs:
-  code-coverage:
+  code-quality:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
           go-version: 1.20.x
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download unit test coverage results
         uses: actions/download-artifact@v3
