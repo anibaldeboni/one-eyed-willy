@@ -18,3 +18,6 @@ jobs:
   unit-tests:
     uses: ./.github/workflows/unit-tests.yml
     secrets: inherit
+  code-analysis:
+    uses: ./.github/workflows/codeql.yml
+    secrets: inherit
