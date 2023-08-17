@@ -9,6 +9,8 @@ permissions:
   contents: write
   issues: read
   checks: write
+  actions: read
+  security-events: write
 
 concurrency:
   group: ci-${{ github.ref }}
