@@ -4,7 +4,8 @@ on: workflow_call
 env:
   LATEST_GO_VERSION: "1.20"
 jobs:
-  unit-tests:
+  basic-checks:
+    name: "unit tests and linter"
     strategy:
       fail-fast: false
       matrix:
