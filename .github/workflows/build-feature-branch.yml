@@ -1,0 +1,20 @@
+on:
+  push:
+    branches-ignore:
+      - staging
+      - master
+
+permissions:
+  id-token: write
+  contents: write
+  issues: read
+  checks: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    uses: ./.github/workflows/unit-tests.yml
+    secrets: inherit

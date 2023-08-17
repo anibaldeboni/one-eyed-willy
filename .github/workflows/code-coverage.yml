@@ -1,0 +1,30 @@
+name: Run code coverage analysis
+on:
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        description: "Codecov token"
+        required: true
+jobs:
+  code-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.20.x
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download unit test coverage results
+        uses: actions/download-artifact@v3
+        with:
+          name: unit-test-coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
