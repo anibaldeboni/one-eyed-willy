@@ -7,6 +7,7 @@ import (
 
 type Handler struct {
 	PdfRender *pdf.PdfRender
+	PdfTool   *pdf.PdfTool
 }
 
 const (
@@ -16,6 +17,7 @@ const (
 func New(e *echo.Echo) *Handler {
 	h := &Handler{
 		PdfRender: pdf.NewRender(),
+		PdfTool:   pdf.NewPdfTool(),
 	}
 	h.setupRoutes(e)
 	return h

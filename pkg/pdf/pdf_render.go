@@ -3,18 +3,12 @@ package pdf
 import (
 	"bytes"
 	"context"
-	"errors"
-	"fmt"
 	"io"
 
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/one-eyed-willy/pkg/logger"
-	pdfcpuAPI "github.com/pdfcpu/pdfcpu/pkg/api"
-	pdfcpuLog "github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
-	pdfcpuConfig "github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
 )
 
 func sanitizeHTML(html string) string {
@@ -25,11 +19,26 @@ func sanitizeHTML(html string) string {
 }
 
 type PdfRender struct {
-	Context context.Context
-	Cancel  context.CancelFunc
+	Context   context.Context
+	Cancel    context.CancelFunc
+	chromeApi chromeApi
+}
+type chromeApi interface {
+	Run(ctx context.Context, actions ...chromedp.Action) error
+	NewContext(parent context.Context, opts ...func(*chromedp.Context)) (context.Context, context.CancelFunc)
+}
+type chromeApiImpl struct{}
+
+func (c *chromeApiImpl) Run(ctx context.Context, actions ...chromedp.Action) error {
+	return chromedp.Run(ctx, actions...)
+}
+
+func (c *chromeApiImpl) NewContext(parent context.Context, opts ...func(*chromedp.Context)) (context.Context, context.CancelFunc) {
+	return chromedp.NewContext(parent, opts...)
 }
 
 func NewRender() *PdfRender {
+	r := &PdfRender{chromeApi: &chromeApiImpl{}}
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("headless", true),
 		chromedp.Flag("disable-gpu", true),
@@ -54,18 +63,20 @@ func NewRender() *PdfRender {
 	}
 	success = true
 
-	return &PdfRender{Context: ctx, Cancel: cancel}
+	r.Context = ctx
+	r.Cancel = cancel
+	return r
 }
 
-func GenerateFromHTML(ctx context.Context, html string) (io.Reader, error) {
-	ctx, cancel := chromedp.NewContext(ctx, chromedp.WithLogf(logger.Log().Infof))
+func (p *PdfRender) GenerateFromHTML(html string) (io.Reader, error) {
+	ctx, cancel := p.chromeApi.NewContext(p.Context, chromedp.WithLogf(logger.Log().Infof))
 	defer cancel()
 	defer func() {
 		_ = chromedp.Cancel(ctx)
 	}()
 
 	buf := bytes.Buffer{}
-	if err := chromedp.Run(ctx, printHTMLToPDF(sanitizeHTML(html), &buf)); err != nil {
+	if err := p.chromeApi.Run(ctx, printHTMLToPDF(sanitizeHTML(html), &buf)); err != nil {
 		return nil, err
 	}
 
@@ -93,42 +104,4 @@ func printHTMLToPDF(html string, res *bytes.Buffer) chromedp.Tasks {
 			return nil
 		}),
 	}
-}
-
-func Merge(files [][]byte) (file io.Reader, err error) {
-	pdfcpuConfig.ConfigPath = "disable"
-	pdfcpuLog.DisableLoggers()
-
-	conf := pdfcpuConfig.NewDefaultConfiguration()
-	var rs []io.ReadSeeker
-	for i, res := range files {
-		if err := ValidatePdf(res); err != nil {
-			return nil, fmt.Errorf("File number %d is an invalid pdf: %s", i+1, err.Error())
-		}
-		rs = append(rs, io.ReadSeeker(bytes.NewReader(res)))
-	}
-	buf := bytes.Buffer{}
-
-	if err = pdfcpuAPI.MergeRaw(rs, &buf, conf); err != nil {
-		return nil, errors.New("Could not merge pdfs. Some files can't be read")
-	}
-
-	return io.Reader(&buf), nil
-}
-
-func Encrypt(file []byte, password string) (io.Reader, error) {
-	pdfcpuConfig.ConfigPath = "disable"
-	pdfcpuLog.DisableLoggers()
-
-	if err := ValidatePdf(file); err != nil {
-		return nil, err
-	}
-	conf := model.NewAESConfiguration(password, password, 256)
-
-	buf := bytes.Buffer{}
-	if err := pdfcpuAPI.Encrypt(bytes.NewReader(file), &buf, conf); err != nil {
-		return nil, errors.New("Could not encrypt pdf")
-	}
-
-	return io.Reader(&buf), nil
 }

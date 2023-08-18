@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/one-eyed-willy/pkg/pdf"
 	"github.com/one-eyed-willy/pkg/utils"
 )
 
@@ -33,7 +32,7 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.GenerateFromHTML(h.PdfRender.Context, string(decoded))
+	pdf, err := h.PdfRender.GenerateFromHTML(string(decoded))
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -66,7 +65,7 @@ func (h *Handler) MergePdfs(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.Merge(files)
+	pdf, err := h.PdfTool.Merge(files)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
@@ -99,7 +98,7 @@ func (h *Handler) EncryptPdf(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
 	}
 
-	pdf, err := pdf.Encrypt(file, req.Password)
+	pdf, err := h.PdfTool.Encrypt(file, req.Password)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, utils.NewError(err))
