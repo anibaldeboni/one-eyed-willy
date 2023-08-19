@@ -1,4 +1,4 @@
-name: Run linter and unit tests
+name: Linter and unit tests
 on: workflow_call
 
 jobs:

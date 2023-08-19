@@ -1,3 +1,5 @@
+name: Master branch CI
+
 on:
   push:
     branches: [master]

@@ -1,4 +1,4 @@
-name: Run code quality analysis
+name: Code quality analysis
 on:
   workflow_call:
     secrets:
@@ -7,7 +7,7 @@ on:
         required: true
 jobs:
   code-quality:
-    name: "codecov"
+    name: "Codecov"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

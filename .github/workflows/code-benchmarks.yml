@@ -1,10 +1,10 @@
-name: "Run code benchmarks"
+name: "Code benchmarks"
 
 on: workflow_call
 
 jobs:
   code-benckmarks:
-    name: "analyze"
+    name: "Analyze"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code (Previous)
