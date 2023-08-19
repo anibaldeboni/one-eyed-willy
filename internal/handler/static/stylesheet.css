@@ -22,6 +22,7 @@ button {
   display: flex;
   height: 250px;
   width: 250px;
+  margin-bottom: 2em;
 }
 .horizontal-align {
   display: flex;
@@ -42,7 +43,7 @@ button {
 }
 .container-small {
   max-width: 30em;
-  width: 45%;
+  width: 40%;
 }
 .container-large {
   width: 90%;
