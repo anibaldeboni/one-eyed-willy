@@ -6,6 +6,6 @@ coverage:
 ignore:
   - "internal/web/file_binder.go"
   - "internal/handler/request.go"
+  - "pkg/pdf/test_mocks.go"
   - "testdata"
   - "*_test.go"
-  - "test_*.go"
