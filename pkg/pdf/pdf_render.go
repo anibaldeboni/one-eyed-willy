@@ -69,7 +69,7 @@ func NewRender() *PdfRender {
 }
 
 func (p *PdfRender) GenerateFromHTML(html string) (io.Reader, error) {
-	ctx, cancel := p.chromeApi.NewContext(p.Context, chromedp.WithLogf(logger.Log().Infof))
+	ctx, cancel := p.chromeApi.NewContext(p.Context, chromedp.WithLogf(logger.New().Infof))
 	defer cancel()
 	defer func() {
 		_ = chromedp.Cancel(ctx)

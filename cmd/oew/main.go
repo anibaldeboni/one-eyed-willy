@@ -9,7 +9,6 @@ import (
 	"time"
 
 	_ "github.com/one-eyed-willy/docs"
-	"github.com/one-eyed-willy/internal/config"
 	"github.com/one-eyed-willy/internal/handler"
 	"github.com/one-eyed-willy/internal/web"
 	"github.com/one-eyed-willy/pkg/envs"
@@ -33,15 +32,15 @@ import (
 // @consumes  application/json
 func main() {
 	envs.Load()
-	conf := config.InitAppConfig()
-	w := web.New(conf)
+	logger := logger.New()
+	w := web.New(logger)
 	h := handler.New(w)
 	defer h.PdfRender.Cancel()
 
 	go func() {
-		if err := w.Start(":" + conf.AppPort); err != nil && err != http.ErrServerClosed {
+		if err := w.Start(":" + appPort()); err != nil && err != http.ErrServerClosed {
 			h.PdfRender.Cancel()
-			logger.Log().Fatalf("shutting down the server: %v", err)
+			logger.Fatalf("shutting down the server: %v", err)
 		}
 	}()
 
@@ -58,4 +57,12 @@ func main() {
 	if err := w.Shutdown(ctx); err != nil {
 		w.Logger.Fatal(err)
 	}
+}
+
+func appPort() string {
+	var port = envs.Get("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	return port
 }

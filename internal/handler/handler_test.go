@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
-	"github.com/one-eyed-willy/internal/config"
 	"github.com/one-eyed-willy/internal/web"
+	"github.com/one-eyed-willy/pkg/logger"
 	"github.com/one-eyed-willy/pkg/pdf"
 	"github.com/stretchr/testify/assert"
 )
@@ -91,8 +91,7 @@ func findRouteByPath(routes []*echo.Route, path string) *echo.Route {
 }
 
 func setupTestHandler(pdfTool *pdf.PdfTool, pdfRender *pdf.PdfRender) (*Handler, *echo.Echo) {
-	conf := config.InitAppConfig()
-	e := web.New(conf)
+	e := web.New(logger.New())
 	var t *pdf.PdfTool
 	var r *pdf.PdfRender
 	if pdfTool == nil {
