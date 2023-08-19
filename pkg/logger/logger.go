@@ -6,8 +6,6 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var logger *zap.SugaredLogger
-
 func New() *zap.SugaredLogger {
 	var cfg zap.Config
 
