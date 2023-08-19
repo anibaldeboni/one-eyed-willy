@@ -10,16 +10,16 @@ import (
 
 // CreatePdfFromHtml godoc
 //
-//	@summary		Create a pdf
+//	@summary      Create a pdf
 //	@description	Generate a new pdf file from a html string
-//	@tags			pdf
-//	@accept			applcation/json
-//	@produce		application/octet-stream
-//	@Param			html	body	createPdfFromHTMLRequest	true	"Base64 encoded string of a html"
-//	@success		200
-//	@failure		400	{object}	utils.Error
-//	@failure		500	{object}	utils.Error
-//	@Router			/pdf/generate [post]
+//	@tags         PDF Generator
+//	@accept       applcation/json
+//	@produce      application/octet-stream
+//	@Param        html	body	createPdfFromHTMLRequest	true	"Base64 encoded string of a html"
+//	@success      200
+//	@failure      400	{object}	utils.Error
+//	@failure      500	{object}	utils.Error
+//	@Router       /pdf/generate [post]
 func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 	req := new(createPdfFromHTMLRequest)
 
@@ -43,16 +43,16 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 
 // MergePdfFiles godoc
 //
-//	@Summary		Merge pdfs
-//	@Description	Merges two or more pdfs
-//	@Tags			pdf
-//	@Accept			multipart/form-data
-//	@Produce		application/octet-stream
-//	@param			files	formData	file	true	"pdf files to merge"
-//	@Success		200
-//	@Failure		400	{object}	utils.Error
-//	@Failure		500	{object}	utils.Error
-//	@Router			/pdf/merge [post]
+//	@Summary      Merge pdfs
+//	@Description  Merges two or more pdfs
+//	@Tags         PDF Tools
+//	@Accept       multipart/form-data
+//	@Produce      application/octet-stream
+//	@param        files	formData	file	true	"pdf files to merge"
+//	@Success      200
+//	@Failure      400	{object}	utils.Error
+//	@Failure      500	{object}	utils.Error
+//	@Router       /pdf/merge [post]
 func (h *Handler) MergePdfs(c echo.Context) (err error) {
 	req := new(mergePdfsRequest)
 
@@ -76,17 +76,17 @@ func (h *Handler) MergePdfs(c echo.Context) (err error) {
 
 // EncryptPdfFiles godoc
 //
-//		@Summary		Encrypt pdf
-//		@Description	Encrypts a pdf file
-//		@Tags			pdf
-//		@Accept			multipart/form-data
-//		@Produce		application/octet-stream
-//		@param			file	formData	file	true	"pdf file to encrypt"
-//	  @param			password	formData	string	true	"password to encrypt the pdf"
-//		@Success		200
-//		@Failure		400	{object}	utils.Error
-//		@Failure		500	{object}	utils.Error
-//		@Router			/pdf/encrypt [post]
+//	@Summary      Encrypt pdf
+//	@Description  Encrypts a pdf file
+//	@Tags         PDF Tools
+//	@Accept       multipart/form-data
+//	@Produce      application/octet-stream
+//	@param        file		formData	file	true	"pdf file to encrypt"
+//	@param        password	formData	string	true	"file password"
+//	@Success      200
+//	@Failure      400	{object}	utils.Error
+//	@Failure      500	{object}	utils.Error
+//	@Router       /pdf/encrypt [post]
 func (h *Handler) EncryptPdf(c echo.Context) error {
 	req := new(encryptPdfRequest)
 

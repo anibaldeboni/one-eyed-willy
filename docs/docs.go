@@ -24,6 +24,54 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/pdf/encrypt": {
+            "post": {
+                "description": "Encrypts a pdf file",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "PDF Tools"
+                ],
+                "summary": "Encrypt pdf",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "pdf file to encrypt",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "file password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/pdf/generate": {
             "post": {
                 "description": "Generate a new pdf file from a html string",
@@ -34,7 +82,7 @@ const docTemplate = `{
                     "application/octet-stream"
                 ],
                 "tags": [
-                    "pdf"
+                    "PDF Generator"
                 ],
                 "summary": "Create a pdf",
                 "parameters": [
@@ -77,7 +125,7 @@ const docTemplate = `{
                     "application/octet-stream"
                 ],
                 "tags": [
-                    "pdf"
+                    "PDF Tools"
                 ],
                 "summary": "Merge pdfs",
                 "parameters": [
@@ -137,7 +185,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/",
+	BasePath:         "/pdf",
 	Schemes:          []string{"http", "https"},
 	Title:            "One-Eyed-Willy pdf generation API",
 	Description:      "This documentation for One-Eyed-Willy pdf generator.",

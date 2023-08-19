@@ -16,21 +16,21 @@ import (
 	"github.com/one-eyed-willy/pkg/logger"
 )
 
-//	@title			One-Eyed-Willy pdf generation API
-//	@version		1.0
-//	@description	This documentation for One-Eyed-Willy pdf generator.
-//	@termsOfService	http://swagger.io/terms/
+//	@title  One-Eyed-Willy pdf generation API
+//	@version  1.0
+//	@description  This documentation for One-Eyed-Willy pdf generator.
+//	@termsOfService  http://swagger.io/terms/
 
-//	@contact.name	Aníbal Deboni Neto
-//	@contact.email	anibaldeboni@gmail.com
+//	@contact.name  Aníbal Deboni Neto
+//	@contact.email  anibaldeboni@gmail.com
 
-//	@license.name	Apache 2.0
-//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+//	@license.name  Apache 2.0
+//	@license.url  http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @BasePath	/
-// @schemes	http https
-// @produces	application/json application/octet-stream
-// @consumes	application/json
+// @BasePath  /pdf
+// @schemes  http https
+// @produces  application/json application/octet-stream
+// @consumes  application/json
 func main() {
 	envs.Load()
 	conf := config.InitAppConfig()

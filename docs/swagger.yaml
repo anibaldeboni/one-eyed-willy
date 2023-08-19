@@ -1,4 +1,4 @@
-basePath: /
+basePath: /pdf
 definitions:
   handler.createPdfFromHTMLRequest:
     properties:
@@ -25,6 +25,38 @@ info:
   title: One-Eyed-Willy pdf generation API
   version: "1.0"
 paths:
+  /pdf/encrypt:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Encrypts a pdf file
+      parameters:
+      - description: pdf file to encrypt
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: file password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Encrypt pdf
+      tags:
+      - PDF Tools
   /pdf/generate:
     post:
       consumes:
@@ -52,7 +84,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: Create a pdf
       tags:
-      - pdf
+      - PDF Generator
   /pdf/merge:
     post:
       consumes:
@@ -79,7 +111,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: Merge pdfs
       tags:
-      - pdf
+      - PDF Tools
 schemes:
 - http
 - https
