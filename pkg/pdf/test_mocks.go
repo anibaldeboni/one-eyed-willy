@@ -21,6 +21,10 @@ func (m *MockPdfApi) Encrypt(rs io.ReadSeeker, w io.Writer, conf *pdfcpuConfig.C
 	return errors.New("Could not encrypt pdf")
 }
 
+func NewMockPdfRender() *PdfRender {
+	return &PdfRender{chromeApi: new(MockChromeApi)}
+}
+
 type MockChromeApi struct {
 	mock.Mock
 }

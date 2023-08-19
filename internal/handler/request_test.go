@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	"github.com/one-eyed-willy/testdata"
 )
 
 func TestCreatePdfFromHTMLRequestBind(t *testing.T) {
@@ -29,7 +30,7 @@ func TestCreatePdfFromHTMLRequestBind(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			setup()
+			_, e := setupTestHandler(nil, nil)
 			req := httptest.NewRequest(echo.POST, "/", strings.NewReader(fmt.Sprintf(`{"html":"%s"}`, tt.request.HTML)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			res := httptest.NewRecorder()
@@ -60,8 +61,8 @@ func TestEncryptPdfRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			setup()
-			body, boundary := createBody(t, 1)
+			_, e := setupTestHandler(nil, nil)
+			body, boundary := createForm(t, [][]byte{testdata.LoadFile(t)})
 			req := httptest.NewRequest(echo.POST, "/", body)
 			req.Header.Set(echo.HeaderContentType, fmt.Sprintf("%s; boundary=%s", echo.MIMEMultipartForm, boundary))
 			req.Header.Set(echo.HeaderContentLength, fmt.Sprintf("%d", len(body.Bytes())))

@@ -8,3 +8,4 @@ ignore:
   - "internal/handler/request.go"
   - "testdata"
   - "*_test.go"
+  - "test_*.go"

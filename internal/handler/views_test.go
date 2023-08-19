@@ -30,7 +30,7 @@ func TestViews(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("path=%s", tt.Path), func(t *testing.T) {
-			setup()
+			_, e := setupTestHandler(nil, nil)
 			req := httptest.NewRequest(echo.GET, tt.Path, nil)
 			rec := httptest.NewRecorder()
 			e.ServeHTTP(rec, req)
