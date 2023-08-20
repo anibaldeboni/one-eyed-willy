@@ -43,7 +43,15 @@ func TestGeneratePdfFromHTML(t *testing.T) {
 			wantErr:            true,
 		},
 		{
-			name:               "when chromedp returns an error",
+			name:               "when html is not base64 encoded",
+			html:               "this-is-not-a-base64-encoded-string",
+			pdfRender:          nil,
+			wantHttpStatusCode: http.StatusBadRequest,
+			wantContentType:    echo.MIMEApplicationJSONCharsetUTF8,
+			wantErr:            true,
+		},
+		{
+			name:               "when PdfRender returns an error",
 			html:               encodedHTML,
 			pdfRender:          pdf.NewMockPdfRender(),
 			wantHttpStatusCode: http.StatusInternalServerError,

@@ -23,8 +23,8 @@ import (
 func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 	req := new(createPdfFromHTMLRequest)
 
-	if err := req.bind(c); err != nil {
-		return c.JSON(http.StatusBadRequest, utils.NewError(err))
+	if err := bindRequest(c, req); err != nil {
+		return c.JSON(http.StatusBadRequest, utils.NewValidatorError(err))
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(req.HTML)
@@ -56,8 +56,8 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 func (h *Handler) MergePdfs(c echo.Context) (err error) {
 	req := new(mergePdfsRequest)
 
-	if err := req.bind(c); err != nil {
-		return c.JSON(http.StatusBadRequest, utils.NewError(err))
+	if err := bindRequest(c, req); err != nil {
+		return c.JSON(http.StatusBadRequest, utils.NewValidatorError(err))
 	}
 
 	files, err := readFiles(req.Files)
@@ -90,8 +90,8 @@ func (h *Handler) MergePdfs(c echo.Context) (err error) {
 func (h *Handler) EncryptPdf(c echo.Context) error {
 	req := new(encryptPdfRequest)
 
-	if err := req.bind(c); err != nil {
-		return c.JSON(http.StatusBadRequest, utils.NewError(err))
+	if err := bindRequest(c, req); err != nil {
+		return c.JSON(http.StatusBadRequest, utils.NewValidatorError(err))
 	}
 	file, err := readFile(req.File)
 	if err != nil {

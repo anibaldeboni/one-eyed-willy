@@ -23,13 +23,28 @@ func NewError(err error) Error {
 	}
 	return e
 }
+func msgForTag(fe validator.FieldError) string {
+	switch fe.Tag() {
+	case "required":
+		return "This field is required"
+	case "email":
+		return "Invalid email"
+	case "base64":
+		return "Invalid base64 string"
+	case "gt":
+		return fmt.Sprintf("This field must be greater than %s", fe.Param())
+	case "lt":
+		return fmt.Sprintf("This field must be less than %s", fe.Param())
+	}
+	return fe.Error()
+}
 
 func NewValidatorError(err error) Error {
 	e := Error{}
 	e.Errors = make(map[string]interface{})
 	errs := err.(validator.ValidationErrors)
 	for _, v := range errs {
-		e.Errors[v.Field()] = fmt.Sprintf("%v", v.Tag())
+		e.Errors[v.Field()] = fmt.Sprintf("%v", msgForTag(v))
 	}
 	return e
 }
