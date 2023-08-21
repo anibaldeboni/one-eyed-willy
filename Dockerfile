@@ -9,8 +9,8 @@ COPY . $APP_DIR
 RUN go mod download
 RUN CGO_ENABLED=0 go build -v -o $APP_DIR/bin $APP_DIR/cmd/oew/main.go
 
-# Copy binary to final image.
-FROM alpine
+# Copy binary to app image.
+FROM alpine as app
 LABEL maintainer="Aníbal Deboni Neto <anibaldeboni@gmail.com>"
 RUN echo @latest https://dl-cdn.alpinelinux.org/alpine/latest-stable/main >> /etc/apk/repositories && \
     echo @latest https://dl-cdn.alpinelinux.org/alpine/latest-stable/community >> /etc/apk/repositories && \

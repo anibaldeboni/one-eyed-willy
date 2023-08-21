@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  app:
+    container_name: "one-eyed-willy"
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: app
+    volumes:
+      - .:/opt/app/api
+    ports:
+      - "8080:8080"
