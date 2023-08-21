@@ -30,6 +30,12 @@ build:
 build-static:
 	CGO_ENABLED=0 go build -race -v -o $(APP) -a -installsuffix cgo -ldflags $(LDFLAGS) .
 
+docker:
+	@docker build -t $(APP) .
+
+docker-run:
+	@docker run -it --rm -p 8080:8080 $(APP)
+
 clean:
 	@rm -rf $(BIN)
 
