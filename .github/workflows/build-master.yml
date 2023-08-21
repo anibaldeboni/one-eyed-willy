@@ -26,9 +26,6 @@ jobs:
   codeql:
     uses: ./.github/workflows/codeql.yml
     secrets: inherit
-  benchmarks:
-    uses: ./.github/workflows/code-benchmarks.yml
-    secrets: inherit
   coverage:
     uses: ./.github/workflows/code-quality.yml
     secrets: inherit
