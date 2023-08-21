@@ -62,14 +62,29 @@ make build
 
 # Running
 
+You may run the application directly from the source using:
+
 ```
 make run
 ```
 
+Or inside a docker container:
+
+```
+make docker-build
+make docker
+```
+
 It will start a server on port `8080`
 
-`GET http://localhost:8080/docs` shows the swagger documentation
+# API
 
-`POST http://localhost:8080/pdf` generates a pdf file from a html base64 encoded string
+`POST http://localhost:8080/pdf/generate` generates a pdf file from a html base64 encoded string
 
 `POST http://localhost:8080/pdf/merge` merges two or more pdf files
+
+`POST http://localhost:8080/pdf/encrypt` encrypt a pdf file witha given password
+
+# Frontend
+
+OEW has a web frontend. You may access it in your browser at `http://localhost:8080/`
