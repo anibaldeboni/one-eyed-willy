@@ -60,13 +60,16 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.Error"
+                            "$ref": "#/definitions/errors.ValidationError"
                         }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large"
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.Error"
+                            "$ref": "#/definitions/errors.Error"
                         }
                     }
                 }
@@ -103,13 +106,16 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.Error"
+                            "$ref": "#/definitions/errors.ValidationError"
                         }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large"
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.Error"
+                            "$ref": "#/definitions/errors.Error"
                         }
                     }
                 }
@@ -144,13 +150,16 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.Error"
+                            "$ref": "#/definitions/errors.ValidationError"
                         }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large"
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.Error"
+                            "$ref": "#/definitions/errors.Error"
                         }
                     }
                 }
@@ -158,6 +167,30 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "errors.Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "object",
+                    "additionalProperties": {}
+                }
+            }
+        },
+        "errors.ValidationError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "object",
+                    "additionalProperties": {}
+                }
+            }
+        },
         "handler.createPdfFromHTMLRequest": {
             "type": "object",
             "required": [
@@ -166,15 +199,6 @@ const docTemplate = `{
             "properties": {
                 "html": {
                     "type": "string"
-                }
-            }
-        },
-        "utils.Error": {
-            "type": "object",
-            "properties": {
-                "errors": {
-                    "type": "object",
-                    "additionalProperties": true
                 }
             }
         }

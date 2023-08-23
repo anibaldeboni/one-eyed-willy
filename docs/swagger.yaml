@@ -1,17 +1,27 @@
 basePath: /pdf
 definitions:
+  errors.Error:
+    properties:
+      code:
+        type: string
+      errors:
+        additionalProperties: {}
+        type: object
+    type: object
+  errors.ValidationError:
+    properties:
+      code:
+        type: string
+      fields:
+        additionalProperties: {}
+        type: object
+    type: object
   handler.createPdfFromHTMLRequest:
     properties:
       html:
         type: string
     required:
     - html
-    type: object
-  utils.Error:
-    properties:
-      errors:
-        additionalProperties: true
-        type: object
     type: object
 info:
   contact:
@@ -49,11 +59,13 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.Error'
+            $ref: '#/definitions/errors.ValidationError'
+        "413":
+          description: Request Entity Too Large
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.Error'
+            $ref: '#/definitions/errors.Error'
       summary: Encrypt pdf
       tags:
       - PDF Tools
@@ -77,11 +89,13 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.Error'
+            $ref: '#/definitions/errors.ValidationError'
+        "413":
+          description: Request Entity Too Large
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.Error'
+            $ref: '#/definitions/errors.Error'
       summary: Create a pdf
       tags:
       - PDF Generator
@@ -104,11 +118,13 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.Error'
+            $ref: '#/definitions/errors.ValidationError'
+        "413":
+          description: Request Entity Too Large
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.Error'
+            $ref: '#/definitions/errors.Error'
       summary: Merge pdfs
       tags:
       - PDF Tools

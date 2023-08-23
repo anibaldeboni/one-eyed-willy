@@ -16,7 +16,7 @@ test: install_deps
 	@go test -v -race ./...
 
 docs: install_swag
-	swag i --parseInternal --dir ./cmd/oew/,./internal/handler/,./pkg/utils
+	swag i --parseInternal --dir ./cmd/oew/,./internal/
 
 install_deps:
 	@go get -v ./...
