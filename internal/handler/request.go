@@ -23,6 +23,6 @@ type mergePdfsRequest struct {
 }
 
 type encryptPdfRequest struct {
-	File     *multipart.FileHeader `form:"file" validate:"required,lt=2"`
+	File     *multipart.FileHeader `form:"file" validate:"required"`
 	Password string                `form:"password" validate:"required,gt=0"`
 }
