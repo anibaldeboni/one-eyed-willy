@@ -5,10 +5,10 @@ import (
 	"context"
 	"io"
 
-	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/one-eyed-willy/pkg/logger"
+	"github.com/one-eyed-willy/pkg/chromium"
+	"go.uber.org/zap"
 )
 
 func sanitizeHTML(html string) string {
@@ -37,31 +37,9 @@ func (c *chromeApiImpl) NewContext(parent context.Context, opts ...func(*chromed
 	return chromedp.NewContext(parent, opts...)
 }
 
-func NewRender() *PdfRender {
+func NewRender(logger *zap.Logger) *PdfRender {
 	r := &PdfRender{chromeApi: &chromeApiImpl{}}
-	opts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.Flag("headless", true),
-		chromedp.Flag("disable-gpu", true),
-		chromedp.Flag("blink-settings", "scriptEnabled=false"),
-	)
-	ctx, cancel := chromedp.NewExecAllocator(context.Background(), opts...)
-
-	c, cancelCtx := chromedp.NewContext(ctx)
-
-	// ensure cleanup
-	var success bool
-	defer func() {
-		if !success {
-			_ = chromedp.Cancel(c)
-			cancelCtx()
-		}
-	}()
-
-	err := chromedp.Run(c)
-	if err != nil {
-		panic(err)
-	}
-	success = true
+	ctx, cancel := chromium.New(logger)
 
 	r.Context = ctx
 	r.Cancel = cancel
@@ -69,39 +47,16 @@ func NewRender() *PdfRender {
 }
 
 func (p *PdfRender) GenerateFromHTML(html string) (io.Reader, error) {
-	ctx, cancel := p.chromeApi.NewContext(p.Context, chromedp.WithLogf(logger.New().Infof))
+	ctx, cancel := p.chromeApi.NewContext(p.Context)
 	defer cancel()
-	defer func() {
-		_ = chromedp.Cancel(ctx)
-	}()
 
 	buf := bytes.Buffer{}
-	if err := p.chromeApi.Run(ctx, printHTMLToPDF(sanitizeHTML(html), &buf)); err != nil {
+
+	options := chromium.DefaultOptions()
+	if err := p.chromeApi.Run(ctx, chromium.PrintHTMLToPDFTasks(sanitizeHTML(html), &buf, options)); err != nil {
 		return nil, err
 	}
 
 	return io.Reader(&buf), nil
 
-}
-
-func printHTMLToPDF(html string, res *bytes.Buffer) chromedp.Tasks {
-	return chromedp.Tasks{
-		chromedp.Navigate("about:blank"),
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			frameTree, err := page.GetFrameTree().Do(ctx)
-			if err != nil {
-				return err
-			}
-
-			return page.SetDocumentContent(frameTree.Frame.ID, html).Do(ctx)
-		}),
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			buf, _, err := page.PrintToPDF().WithPrintBackground(false).Do(ctx)
-			if err != nil {
-				return err
-			}
-			*res = *bytes.NewBuffer(buf)
-			return nil
-		}),
-	}
 }

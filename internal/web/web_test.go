@@ -6,13 +6,15 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
-	"github.com/one-eyed-willy/pkg/logger"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
+
+var logger = zap.NewNop()
 
 func TestHealthCheck(t *testing.T) {
 	t.Run("health check", func(t *testing.T) {
-		e := New(logger.New())
+		e := New(logger)
 		req := httptest.NewRequest(echo.GET, "/health", nil)
 		rec := httptest.NewRecorder()
 		e.ServeHTTP(rec, req)

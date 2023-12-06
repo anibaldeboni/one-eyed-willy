@@ -1,13 +1,15 @@
 package web
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/one-eyed-willy/pkg/middlewares"
 	"go.uber.org/zap"
 )
 
-func New(logger *zap.SugaredLogger) *echo.Echo {
+func New(logger *zap.Logger) *echo.Echo {
 
 	if logger != nil {
 		//nolint:errcheck
@@ -29,9 +31,9 @@ func New(logger *zap.SugaredLogger) *echo.Echo {
 		HandleError:  true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
 			if v.Error == nil {
-				logger.Infof("method=%s path=%s status=%d request_id=%s latency=%d", v.Method, v.URI, v.Status, v.RequestID, v.Latency)
+				logger.Info(fmt.Sprintf("method=%s path=%s status=%d request_id=%s latency=%d", v.Method, v.URI, v.Status, v.RequestID, v.Latency))
 			} else {
-				logger.Errorf("method=%s path=%s status=%d request_id=%s latency=%d error=%v", v.Method, v.URI, v.Status, v.RequestID, v.Latency, v.Error)
+				logger.Error(fmt.Sprintf("method=%s path=%s status=%d request_id=%s latency=%d error=%v", v.Method, v.URI, v.Status, v.RequestID, v.Latency, v.Error))
 			}
 			return nil
 		},

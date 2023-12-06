@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func New() *zap.SugaredLogger {
+func New() *zap.Logger {
 	var cfg zap.Config
 
 	if envs.IsProd() {
@@ -27,5 +27,5 @@ func New() *zap.SugaredLogger {
 	cfg.OutputPaths = []string{"stdout"}
 	l, _ := cfg.Build()
 
-	return l.Sugar()
+	return zap.New(l.Core())
 }

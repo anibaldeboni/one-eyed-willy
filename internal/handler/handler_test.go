@@ -5,15 +5,17 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/one-eyed-willy/internal/web"
-	"github.com/one-eyed-willy/pkg/logger"
 	"github.com/one-eyed-willy/pkg/pdf"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
+
+var logger = zap.NewNop()
 
 func TestNewHandler(t *testing.T) {
 	t.Run("When creating a new handler", func(t *testing.T) {
 		e := echo.New()
-		h := New(e)
+		h := New(e, logger)
 		assert.IsType(t, &Handler{}, h)
 		assert.NotNil(t, h.PdfRender)
 		assert.NotNil(t, h.PdfTool)
@@ -71,7 +73,7 @@ func TestHandlerRoutes(t *testing.T) {
 		},
 	}
 	e := echo.New()
-	_ = New(e)
+	_ = New(e, logger)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -91,7 +93,7 @@ func findRouteByPath(routes []*echo.Route, path string) *echo.Route {
 }
 
 func setupTestHandler(pdfTool *pdf.PdfTool, pdfRender *pdf.PdfRender) (*Handler, *echo.Echo) {
-	e := web.New(logger.New())
+	e := web.New(logger)
 	var t *pdf.PdfTool
 	var r *pdf.PdfRender
 	if pdfTool == nil {
@@ -100,7 +102,7 @@ func setupTestHandler(pdfTool *pdf.PdfTool, pdfRender *pdf.PdfRender) (*Handler,
 		t = pdfTool
 	}
 	if pdfRender == nil {
-		r = pdf.NewRender()
+		r = pdf.NewRender(logger)
 	} else {
 		r = pdfRender
 	}

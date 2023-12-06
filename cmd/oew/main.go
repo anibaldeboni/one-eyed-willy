@@ -34,13 +34,13 @@ func main() {
 	envs.Load()
 	logger := logger.New()
 	w := web.New(logger)
-	h := handler.New(w)
+	h := handler.New(w, logger)
 	defer h.PdfRender.Cancel()
 
 	go func() {
 		if err := w.Start(":" + appPort()); err != nil && err != http.ErrServerClosed {
 			h.PdfRender.Cancel()
-			logger.Fatalf("shutting down the server: %v", err)
+			logger.Fatal(fmt.Sprintf("shutting down the server: %v", err))
 		}
 	}()
 
