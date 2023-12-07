@@ -11,7 +11,6 @@ import (
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
-	"go.uber.org/zap"
 )
 
 func PrintHTMLToPDFTasks(html string, res *bytes.Buffer, options Options) chromedp.Tasks {
@@ -19,6 +18,7 @@ func PrintHTMLToPDFTasks(html string, res *bytes.Buffer, options Options) chrome
 		network.Enable(),
 		fetch.Enable(),
 		runtime.Enable(),
+		forceExactColorsActionFunc(),
 		chromedp.Navigate("about:blank"),
 		loadHTMLAction(html),
 		printHTMLToPDFAction(res, options),
@@ -121,30 +121,5 @@ func forceExactColorsActionFunc() chromedp.ActionFunc {
 		}
 
 		return fmt.Errorf("add CSS for exact colors: %w", err)
-	}
-}
-
-func navigateActionFunc(logger *zap.Logger, url string) chromedp.ActionFunc {
-	return func(ctx context.Context) error {
-		logger.Debug(fmt.Sprintf("navigate to '%s'", url))
-
-		_, _, _, err := page.Navigate(url).Do(ctx)
-		if err != nil {
-			return fmt.Errorf("navigate to '%s': %w", url, err)
-		}
-
-		err = runBatch(
-			ctx,
-			waitForEventDomContentEventFired(ctx, logger),
-			waitForEventLoadEventFired(ctx, logger),
-			waitForEventNetworkIdle(ctx, logger),
-			waitForEventLoadingFinished(ctx, logger),
-		)
-
-		if err == nil {
-			return nil
-		}
-
-		return fmt.Errorf("wait for events: %w", err)
 	}
 }
