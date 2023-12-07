@@ -33,7 +33,9 @@ import (
 func main() {
 	envs.Load()
 	logger := logger.New()
-	defer logger.Sync()
+	defer func() {
+		_ = logger.Sync()
+	}()
 	w := web.New(logger)
 	h := handler.New(w, logger)
 	defer h.PdfRender.Cancel()
