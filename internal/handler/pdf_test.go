@@ -61,7 +61,8 @@ func TestGeneratePdfFromHTML(t *testing.T) {
 	}
 	for _, tt := range tests {
 		h, e := setupTestHandler(nil, tt.pdfRender)
-		req := httptest.NewRequest(echo.POST, "/pdf/generate", strings.NewReader(fmt.Sprintf(`{"html":"%s"}`, tt.html)))
+		payload := toJson(&createPdfFromHTMLRequest{HTML: tt.html})
+		req := httptest.NewRequest(echo.POST, "/pdf/generate", strings.NewReader(payload))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		req.Header.Set(echo.HeaderContentLength, fmt.Sprintf("%d", len(tt.html)))
 		rec := httptest.NewRecorder()
@@ -79,7 +80,8 @@ func TestGeneratePdfFromHTML(t *testing.T) {
 
 func BenchmarkGeneratePdf(b *testing.B) {
 	h, e := setupTestHandler(nil, nil)
-	req := httptest.NewRequest(echo.POST, "/pdf/generate", strings.NewReader(fmt.Sprintf(`{"html":"%s"}`, base64.StdEncoding.EncodeToString([]byte("<h1>Hello World</h1>")))))
+	payload := toJson(&createPdfFromHTMLRequest{HTML: base64.StdEncoding.EncodeToString([]byte("<h1>Hello World</h1>"))})
+	req := httptest.NewRequest(echo.POST, "/pdf/generate", strings.NewReader(payload))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	req.Header.Set(echo.HeaderContentLength, fmt.Sprintf("%d", len([]byte("<h1>Hello World</h1>"))))
 	rec := httptest.NewRecorder()

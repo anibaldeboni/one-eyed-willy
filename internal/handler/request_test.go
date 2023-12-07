@@ -50,7 +50,12 @@ func TestCreatePdfFromHTMLRequest(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, e := setupTestHandler(nil, nil)
-			req := httptest.NewRequest(echo.POST, "/", strings.NewReader(fmt.Sprintf(`{"html":"%s", "headerTemplate": "%s", "footerTemplate": "%s"}`, tt.body, tt.header, tt.footer)))
+			payload := toJson(&createPdfFromHTMLRequest{
+				HTML:           tt.body,
+				HeaderTemplate: tt.header,
+				FooterTemplate: tt.footer,
+			})
+			req := httptest.NewRequest(echo.POST, "/", strings.NewReader(payload))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			res := httptest.NewRecorder()
 			ctx := e.NewContext(req, res)

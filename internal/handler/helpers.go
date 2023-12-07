@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/json"
 	"io"
 	"mime/multipart"
 	"sync"
@@ -44,4 +45,10 @@ func readFiles(files []*multipart.FileHeader) (filesBytes [][]byte, err error) {
 		fb = append(fb, file)
 	}
 	return fb, err
+}
+
+func toJson[T any](obj T) string {
+	b, _ := json.Marshal(obj)
+	return string(b)
+
 }
