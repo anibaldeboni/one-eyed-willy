@@ -15,8 +15,9 @@ func New(logger *zap.Logger) (context.Context, context.CancelFunc) {
 		chromedp.CombinedOutput(debug),
 		chromedp.DisableGPU,
 		chromedp.Headless,
-		chromedp.Flag("blink-settings", "scriptEnabled=false"),
 		chromedp.NoSandbox,
+		chromedp.Flag("blink-settings", "scriptEnabled=false"),
+		chromedp.Flag("font-render-hinting", "none"),
 	)
 	allocatorContext, allocatorCancel := chromedp.NewExecAllocator(context.Background(), opts...)
 
