@@ -1,7 +1,7 @@
 package web
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -10,36 +10,41 @@ import (
 )
 
 func New(logger *zap.Logger) *echo.Echo {
-
-	if logger != nil {
-		//nolint:errcheck
-		defer logger.Sync()
-	}
-
 	e := echo.New()
 	e.Binder = NewFileBinder(e.Binder)
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
 	e.Use(middlewares.HealthCheck())
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
-		LogURI:       true,
-		LogStatus:    true,
-		LogError:     true,
-		LogLatency:   true,
-		LogMethod:    true,
-		LogRequestID: true,
-		HandleError:  true,
-		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			if v.Error == nil {
-				logger.Info(fmt.Sprintf("method=%s path=%s status=%d request_id=%s latency=%d", v.Method, v.URI, v.Status, v.RequestID, v.Latency))
-			} else {
-				logger.Error(fmt.Sprintf("method=%s path=%s status=%d request_id=%s latency=%d error=%v", v.Method, v.URI, v.Status, v.RequestID, v.Latency, v.Error))
-			}
-			return nil
-		},
+		LogURI:        true,
+		LogStatus:     true,
+		LogError:      true,
+		LogLatency:    true,
+		LogMethod:     true,
+		LogRequestID:  true,
+		HandleError:   true,
+		LogValuesFunc: logValues(logger),
 	}))
 	e.HideBanner = true
 	e.Validator = NewValidator()
 
 	return e
+}
+
+func logValues(logger *zap.Logger) func(c echo.Context, v middleware.RequestLoggerValues) error {
+	return func(c echo.Context, v middleware.RequestLoggerValues) error {
+		method := zap.String("method", v.Method)
+		path := zap.String("path", v.URI)
+		status := zap.Int("status", v.Status)
+		requestID := zap.String("request_id", v.RequestID)
+		latency := zap.Int64("latency", int64(v.Latency/time.Millisecond))
+
+		if v.Error != nil {
+			logger.Error("REQUEST", method, path, status, requestID, latency, zap.Error(v.Error))
+		} else {
+			logger.Info("REQUEST", method, path, status, requestID, latency)
+		}
+
+		return nil
+	}
 }
