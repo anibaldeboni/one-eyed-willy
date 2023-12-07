@@ -3,6 +3,7 @@ package pdf
 import (
 	"testing"
 
+	"github.com/one-eyed-willy/pkg/chromium"
 	"github.com/one-eyed-willy/testdata"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
@@ -13,6 +14,7 @@ var logger = zap.NewNop()
 func TestGenerateFromHTML(t *testing.T) {
 	pdfRender := NewRender(logger)
 	mockChromeApi := new(MockChromeApi)
+	options := chromium.DefaultOptions()
 
 	type args struct {
 		html string
@@ -44,7 +46,7 @@ func TestGenerateFromHTML(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := tt.pdfRender.GenerateFromHTML(tt.args.html)
+			result, err := tt.pdfRender.GenerateFromHTML(tt.args.html, options)
 
 			assert.Equal(t, tt.wantErr, err != nil)
 			assert.Equal(t, tt.wantErr, result == nil)
@@ -54,8 +56,9 @@ func TestGenerateFromHTML(t *testing.T) {
 
 func BenchmarkGenerateFromHTML(b *testing.B) {
 	pdfRender := NewRender(logger)
+	options := chromium.DefaultOptions()
 	for i := 0; i < b.N; i++ {
-		_, _ = pdfRender.GenerateFromHTML("<h1>Hello World</h1>")
+		_, _ = pdfRender.GenerateFromHTML("<h1>Hello World</h1>", options)
 	}
 }
 

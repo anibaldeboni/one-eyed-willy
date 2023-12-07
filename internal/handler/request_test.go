@@ -13,24 +13,44 @@ import (
 func TestCreatePdfFromHTMLRequest(t *testing.T) {
 	tests := []struct {
 		name    string
-		request string
+		body    string
+		header  string
+		footer  string
 		wantErr bool
 	}{
 		{
-			name:    "When request is valid",
-			request: "aGVsbG8gd29ybGQ=",
+			name:    "When all fields are  valid",
+			body:    "aGVsbG8gd29ybGQ=",
+			header:  "aGVsbG8gd29ybGQ=",
+			footer:  "aGVsbG8gd29ybGQ=",
 			wantErr: false,
 		},
 		{
-			name:    "When request is invalid",
-			request: "invalid-html",
+			name:    "When body is invalid",
+			body:    "invalid-html",
+			header:  "aGVsbG8gd29ybGQ=",
+			footer:  "aGVsbG8gd29ybGQ=",
+			wantErr: true,
+		},
+		{
+			name:    "When header is invalid",
+			body:    "aGVsbG8gd29ybGQ=",
+			header:  "invalid-html",
+			footer:  "aGVsbG8gd29ybGQ=",
+			wantErr: true,
+		},
+		{
+			name:    "When footer is invalid",
+			body:    "aGVsbG8gd29ybGQ=",
+			header:  "aGVsbG8gd29ybGQ=",
+			footer:  "invalid-html",
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, e := setupTestHandler(nil, nil)
-			req := httptest.NewRequest(echo.POST, "/", strings.NewReader(fmt.Sprintf(`{"html":"%s"}`, tt.request)))
+			req := httptest.NewRequest(echo.POST, "/", strings.NewReader(fmt.Sprintf(`{"html":"%s", "headerTemplate": "%s", "footerTemplate": "%s"}`, tt.body, tt.header, tt.footer)))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			res := httptest.NewRecorder()
 			ctx := e.NewContext(req, res)

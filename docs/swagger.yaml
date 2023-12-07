@@ -18,8 +18,32 @@ definitions:
     type: object
   handler.createPdfFromHTMLRequest:
     properties:
+      footerTemplate:
+        type: string
+      headerTemplate:
+        type: string
       html:
         type: string
+      landscape:
+        type: boolean
+      marginBottom:
+        type: number
+      marginLeft:
+        type: number
+      marginRight:
+        type: number
+      marginTop:
+        type: number
+      omitBackground:
+        type: boolean
+      paperHeight:
+        type: number
+      paperWidth:
+        type: number
+      printBackground:
+        type: boolean
+      scale:
+        type: number
     required:
     - html
     type: object

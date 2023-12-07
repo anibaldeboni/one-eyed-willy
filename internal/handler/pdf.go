@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/one-eyed-willy/internal/errors"
+	"github.com/one-eyed-willy/pkg/chromium"
 )
 
 // CreatePdfFromHtml godoc
@@ -33,13 +34,54 @@ func (h *Handler) GeneratePdfFromHTML(c echo.Context) (err error) {
 		return c.JSON(http.StatusInternalServerError, errors.NewError(err, errors.CodeUndecodableBase64Err))
 	}
 
-	pdf, err := h.PdfRender.GenerateFromHTML(string(decoded))
+	pdf, err := h.PdfRender.GenerateFromHTML(string(decoded), options(req))
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, errors.NewError(err, errors.CodePdfGenerationErr))
 	}
 
 	return c.Stream(http.StatusOK, MIMEApplicationPdf, pdf)
+}
+
+func options(req *createPdfFromHTMLRequest) chromium.Options {
+	options := chromium.DefaultOptions()
+
+	options.Landscape = req.Landscape
+	options.PrintBackground = req.PrintBackground
+	options.OmitBackground = req.OmitBackground
+
+	if req.Scale != 0.0 {
+		options.Scale = req.Scale
+	}
+
+	if req.PaperWidth != 0.0 {
+		options.PaperWidth = req.PaperWidth
+	}
+
+	if req.PaperHeight != 0.0 {
+		options.PaperHeight = req.PaperHeight
+	}
+
+	if req.MarginTop != 0.0 {
+		options.MarginTop = req.MarginTop
+	}
+
+	if req.MarginBottom != 0.0 {
+		options.MarginBottom = req.MarginBottom
+	}
+
+	if req.MarginLeft != 0.0 {
+		options.MarginLeft = req.MarginLeft
+	}
+
+	if req.MarginRight != 0.0 {
+		options.MarginRight = req.MarginRight
+	}
+
+	options.HeaderTemplate = req.HeaderTemplate
+	options.FooterTemplate = req.FooterTemplate
+
+	return options
 }
 
 // MergePdfFiles godoc

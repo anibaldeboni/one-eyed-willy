@@ -46,13 +46,12 @@ func NewRender(logger *zap.Logger) *PdfRender {
 	return r
 }
 
-func (p *PdfRender) GenerateFromHTML(html string) (io.Reader, error) {
+func (p *PdfRender) GenerateFromHTML(html string, options chromium.Options) (io.Reader, error) {
 	ctx, cancel := p.chromeApi.NewContext(p.Context)
 	defer cancel()
 
 	buf := bytes.Buffer{}
 
-	options := chromium.DefaultOptions()
 	if err := p.chromeApi.Run(ctx, chromium.PrintHTMLToPDFTasks(sanitizeHTML(html), &buf, options)); err != nil {
 		return nil, err
 	}
