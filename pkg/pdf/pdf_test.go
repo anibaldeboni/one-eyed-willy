@@ -5,10 +5,13 @@ import (
 
 	"github.com/one-eyed-willy/testdata"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
+var logger = zap.NewNop()
+
 func TestGenerateFromHTML(t *testing.T) {
-	pdfRender := NewRender()
+	pdfRender := NewRender(logger)
 	mockChromeApi := new(MockChromeApi)
 
 	type args struct {
@@ -50,7 +53,7 @@ func TestGenerateFromHTML(t *testing.T) {
 }
 
 func BenchmarkGenerateFromHTML(b *testing.B) {
-	pdfRender := NewRender()
+	pdfRender := NewRender(logger)
 	for i := 0; i < b.N; i++ {
 		_, _ = pdfRender.GenerateFromHTML("<h1>Hello World</h1>")
 	}
