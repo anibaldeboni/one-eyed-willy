@@ -28,7 +28,7 @@ func (p *pdfApiImpl) Encrypt(rs io.ReadSeeker, w io.Writer, conf *pdfcpuConfig.C
 }
 
 func (p *pdfApiImpl) Merge(rs []io.ReadSeeker, w io.Writer, conf *pdfcpuConfig.Configuration) error {
-	return pdfcpuAPI.MergeRaw(rs, w, conf)
+	return pdfcpuAPI.MergeRaw(rs, w, true, conf)
 }
 
 func NewPdfTool() *PdfTool {
