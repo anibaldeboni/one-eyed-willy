@@ -6,7 +6,7 @@ toolchain go1.21.4
 
 require (
 	github.com/stretchr/testify v1.8.4
-	github.com/swaggo/swag v1.16.2
+	github.com/swaggo/swag v1.16.3
 	go.uber.org/zap v1.26.0
 )
 
