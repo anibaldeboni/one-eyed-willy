@@ -16,6 +16,7 @@ linters-settings:
         arguments: [10]
 
 output:
-  format: "colored-line-number"
+  formats:
+    - format: "colored-line-number"
   print-issued-lines: true
   print-linter-name: true
